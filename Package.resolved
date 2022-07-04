@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "swift-request",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:paylike/swift-request.git",
+      "state" : {
+        "revision" : "022547dfaf7dd3afa8a25944f8e176a6dcb345e7",
+        "version" : "0.1.0"
+      }
+    }
+  ],
+  "version" : 2
+}
