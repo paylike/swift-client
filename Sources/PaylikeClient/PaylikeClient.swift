@@ -63,6 +63,46 @@ public class PaylikeClient {
     }
     
     /**
+     Used for Apple Pay tokenization
+     */
+    @available(iOS 13.0, macOS 10.15, *)
+    public func tokenize(appleToken: String) -> Future<String, Error> {
+        var options = getRequestOptions()
+        options.method = "POST"
+        options.data = ["token": appleToken]
+        let requestPromise = requester.request(endpoint: hosts.applePayAPI, options: options)
+        var bag: Set<AnyCancellable> = []
+        return Future { promise in
+            requestPromise.sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let error):
+                    promise(.failure(error))
+                    bag.removeAll()
+                default:
+                    return
+                }
+            }, receiveValue: { response in
+                defer {
+                    bag.removeAll()
+                }
+                if response.data == nil {
+                    promise(.failure(PaylikeClientErrors
+                        .UnexpectedResponseBody(body: response.data)))
+                    return
+                }
+                do {
+                    let body = try response.getJSONBody()
+                    let token = body["token"] as! String
+                    promise(.success(token))
+                } catch {
+                    promise(.failure(PaylikeClientErrors
+                        .UnexpectedResponseBody(body: response.data)))
+                }
+            }).store(in: &bag)
+        }
+    }
+    
+    /**
      Tokenizes a card number or card CVC code
      */
     @available(iOS 13.0, macOS 10.15, *)
@@ -78,10 +118,14 @@ public class PaylikeClient {
                     switch completion {
                     case .failure(let error):
                         promise(.failure(error))
+                        bag.removeAll()
                     default:
                         return
                     }
                 }, receiveValue: { response in
+                    defer {
+                        bag.removeAll()
+                    }
                     if response.data == nil {
                         promise(.failure(PaylikeClientErrors
                             .UnexpectedResponseBody(body: response.data)))
@@ -95,7 +139,6 @@ public class PaylikeClient {
                         promise(.failure(PaylikeClientErrors
                             .UnexpectedResponseBody(body: response.data)))
                     }
-                    bag.removeAll()
                 }).store(in: &bag)
         }
     }
