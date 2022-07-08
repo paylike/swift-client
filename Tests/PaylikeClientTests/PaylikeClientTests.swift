@@ -29,4 +29,8 @@ final class PaylikeClientTests: XCTestCase {
         }).store(in: &bag)
         wait(for: [expectation], timeout: 50)
     }
+    
+    func testCodable() throws {
+        
+    }
 }

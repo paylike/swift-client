@@ -5,7 +5,7 @@ import Foundation
 /**
  Handles hih level requests toward the Paylike APIs
  */
-public class PaylikeClient {
+public struct PaylikeClient {
     /**
      Client ID sent to the API to identify the client connection interface
      */
@@ -60,6 +60,31 @@ public class PaylikeClient {
         options.clientId = clientId
         options.timeout = timeout
         return options
+    }
+    
+    /**
+     Used for creating and executing the payment flow
+     */
+    @available(iOS 13.0, macOS 10.15, *)
+    public func paymentCreate(payment: [String: Any], hints: Set<String> = []) -> Future<String, Error> {
+        
+        return Future { promise in
+            promise(.success("hey"))
+        }
+    }
+    
+    /**
+     Used for recursive execution during the payment challenge flow
+     */
+    private func paymentCreate(payment: [String: Any], hints: Set<String> = [], challengePath: String?) {
+        let subPath = challengePath ?? "/payments"
+        let url = hosts.api + subPath
+        var options = getRequestOptions()
+        options.method = "POST"
+        var payload: [String: Any] = ["hints": hints]
+        payment.forEach { payload[$0] = $1 }
+        options.data = payload
+        PaymentReq
     }
     
     /**
