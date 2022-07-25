@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "git@github.com:paylike/swift-money.git",
       "state" : {
-        "revision" : "f53ccf354be312b5d629b6b7a42da9409ec003b7",
-        "version" : "0.2.0"
+        "revision" : "8bf29d7f109062f8a5a7e8e08307efece8ec9199",
+        "version" : "0.2.1"
       }
     },
     {
@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "git@github.com:paylike/swift-request.git",
       "state" : {
-        "revision" : "022547dfaf7dd3afa8a25944f8e176a6dcb345e7",
-        "version" : "0.1.0"
+        "revision" : "23f55f51362039e13b395b877f2f38c63cd69312",
+        "version" : "0.2.1"
       }
     }
   ],

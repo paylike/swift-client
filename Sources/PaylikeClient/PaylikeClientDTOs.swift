@@ -2,33 +2,69 @@ import Foundation
 import PaylikeMoney
 
 /**
+ Describes the final response from the payment creation API
+ */
+public struct PaymentResponseDTO : Codable {
+    /**
+     Transaction ID to refer for the transaction
+     */
+    public var authorizationId: String
+}
+
+/**
+ Describes a response recieved during the payment transaction process
+ */
+public struct PaylikeClientResponse {
+    public var HTMLBody: String?
+    public var paymentResponse: PaymentResponseDTO?
+    public var hints: [String]?
+    public var isHTML: Bool
+    /**
+     Initializes a new client response with an HTML body and optional hints list
+     */
+    public init(_ HTMLBody: String, hints: [String] = []) {
+        self.HTMLBody = HTMLBody
+        self.isHTML = true
+        self.hints = hints
+    }
+    /**
+     Initializes a new client response with a finalized [PaymentResponseDTO]
+     */
+    public init(_ response: PaymentResponseDTO, hints: [String] = []) {
+        self.paymentResponse = response
+        self.hints = hints
+        self.isHTML = false
+    }
+}
+
+/**
  Describes card information for a payment request
  */
 public struct PaymentRequestCardDTO : Codable {
     /**
      Tokenized card number
      */
-    public var number: String
+    public var number: [String: String]
     /**
      Expiry. Need to have a `year` and a `month` property
      */
-    public var expiry: [String: Int8]
+    public var expiry: [String: Int]
     /**
      Tokenized CVC code
      */
-    public var code: String
+    public var code: [String: String]
     public init(
         number: String,
-        month: Int8,
-        year: Int8,
+        month: Int,
+        year: Int,
         code: String
     ) {
-        self.number = number
+        self.number = ["token": number]
         self.expiry = [
             "month": month,
-            "year": year,
+            "year": year < 100 ? year + 2000 : year,
         ]
-        self.code = code
+        self.code = ["token": code]
     }
 }
 
@@ -100,9 +136,40 @@ public struct PaymentRequestPlanDTO : Codable {
 }
 
 /**
+ Describes a single challenge received during the security check flow
+ of the payment creation
+ */
+public struct PaymentChallengeDTO : Codable {
+    /**
+     Name to identify the challenge
+     */
+    public var name: String
+    /**
+     Type of the challenge (e.g.: fetch, tds, fingerprint etc..)
+     */
+    public var type: String
+    /**
+     Path to use while solving the challenge
+     */
+    public var path: String
+}
+
+/**
+ Describes a response received in payment flow
+ */
+public struct PaymentFlowResponse: Codable {
+    public var challenges: [PaymentChallengeDTO]?
+    public var action: String?
+    public var fields: [String: String]?
+    public var hints: [String]?
+    public var authorizationId: String?
+    public var transactionId: String?
+}
+
+/**
  All possible options for creating a payment request. More information: https://github.com/paylike/api-reference/blob/main/payments/index.md
  */
-public struct PaymentRequestDTO {
+public class PaymentRequestDTO : Codable {
     /**
      Should be a map with a `key` property, this is the public key for the merchant
      */
@@ -123,11 +190,6 @@ public struct PaymentRequestDTO {
     public var card: PaymentRequestCardDTO?
     /**
      Optional,
-     Custom data to include in your request. The information you set here will appear on our dashboard
-     */
-    public var custom: Codable?
-    /**
-     Optional,
      Collected hints to attach the request. It is required to execute the payment and TDS flow
      */
     public var hints: Set<String>?
@@ -143,10 +205,13 @@ public struct PaymentRequestDTO {
      */
     public var plan: [PaymentRequestPlanDTO]?
     /**
+     Used for testing scenarios in the sandbox environment
+     */
+    public var test: [String: String] = [:]
+    /**
      Inits the DTO with a key
      */
     public init(key: String) {
         self.integration = ["key": key]
     }
-    
 }
