@@ -3,7 +3,8 @@ import XCTest
 import PaylikeMoney
 import Combine
 
-
+let key = "YOUR_KEY"
+let E2E_ENABLED = key != "YOUR_KEY"
 
 final class PaylikeClientTests: XCTestCase {
     func testClientIDGeneration() throws {
@@ -49,8 +50,11 @@ final class PaylikeClientTests: XCTestCase {
     }
     
     func testPaymentCreation() throws {
+        if !E2E_ENABLED {
+            return
+        }
         let client = PaylikeClient()
-        let dto = PaymentRequestDTO(key: "e393f9ec-b2f7-4f81-b455-ce45b02d355d")
+        let dto = PaymentRequestDTO(key: key)
         dto.amount = try PaylikeMoney.fromDouble(currency: "EUR", n: 5.0)
         let (number, cvc) = getTestCardTokenized()
         dto.card = PaymentRequestCardDTO(number: number, month: 12, year: 26, code: cvc)

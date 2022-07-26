@@ -68,6 +68,32 @@ public struct PaylikeClient {
     public func paymentCreate(payment: PaymentRequestDTO, hints: Set<String> = []) -> Future<PaylikeClientResponse, Error> {
         return _paymentCreate(payment: payment, hints: hints, challengePath: nil)
     }
+    
+    /**
+     Used for creating and executing the payment flow in a synchronous manner
+     */
+    public func paymentCreateSync(payment: PaymentRequestDTO, hints: Set<String> = []) -> (response: PaylikeClientResponse?, error: Error?) {
+        let semaphore = DispatchSemaphore(value: 0)
+        var response: PaylikeClientResponse?
+        var error: Error?
+        DispatchQueue.global().async {
+            var bag: Set<AnyCancellable> = []
+            _paymentCreate(payment: payment, hints: hints, challengePath: nil).sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let e):
+                    error = e
+                default:
+                    return
+                }
+            }, receiveValue: { value in
+                response = value
+                semaphore.signal()
+                bag.removeAll()
+            }).store(in: &bag)
+        }
+        semaphore.wait()
+        return (response, error)
+    }
 
     /**
      Used for recursive execution during the payment challenge flow
