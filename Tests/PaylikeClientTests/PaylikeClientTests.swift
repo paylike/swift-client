@@ -7,13 +7,13 @@ let key = "YOUR_KEY"
 let E2E_ENABLED = key != "YOUR_KEY"
 
 final class PaylikeClientTests: XCTestCase {
+    let client = PaylikeClient(log: { _ in })
     func testClientIDGeneration() throws {
         XCTAssertNotNil(PaylikeClient.generateClientID())
         XCTAssertEqual(PaylikeClient.generateClientID().count, "swift-1-123456".count)
     }
     
     func testTokenization() throws {
-        let client = PaylikeClient()
         let promise = client.tokenize(type: PaylikeTokenizedTypes.PCN, value: "4100000000000000")
         let expectation = expectation(description: "Value should be received")
         var bag: Set<AnyCancellable> = []
@@ -33,7 +33,6 @@ final class PaylikeClientTests: XCTestCase {
     }
     
     func testTokenizationSync() throws {
-        let client = PaylikeClient()
         var (token, error) = client.tokenizeSync(type: PaylikeTokenizedTypes.PCN, value: "4100000000000000")
         XCTAssertNotNil(token)
         XCTAssertNil(error)
@@ -43,7 +42,6 @@ final class PaylikeClientTests: XCTestCase {
     }
     
     func getTestCardTokenized() -> (number: String, cvc: String) {
-        let client = PaylikeClient()
         let (number, _) = client.tokenizeSync(type: PaylikeTokenizedTypes.PCN, value: "4100000000000000")
         let (cvc, _) = client.tokenizeSync(type: PaylikeTokenizedTypes.PCSC, value: "123")
         return (number, cvc)
@@ -53,7 +51,6 @@ final class PaylikeClientTests: XCTestCase {
         if !E2E_ENABLED {
             return
         }
-        let client = PaylikeClient()
         let dto = PaymentRequestDTO(key: key)
         dto.amount = try PaylikeMoney.fromDouble(currency: "EUR", n: 5.0)
         let (number, cvc) = getTestCardTokenized()
