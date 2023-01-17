@@ -8,7 +8,7 @@ This packages is a clone of the JS version and responsible for providing a handy
 interface to create payments in the Paylike ecosystem
                        DESC
 
-  s.homepage         = 'https://github.com/paylike/swift-request'
+  s.homepage         = 'https://github.com/paylike/swift-client'
   s.license          = { :type => 'BSD-3', :file => 'LICENSE' }
   s.author           = { 'Paylike.io' => 'info@paylike.io' }
   s.source           = { :git => 'https://github.com/paylike/swift-request.git', :tag => s.version.to_s }
@@ -17,4 +17,3 @@ interface to create payments in the Paylike ecosystem
   s.dependency 'PaylikeRequest'
   s.dependency 'PaylikeMoney'
 end
-
