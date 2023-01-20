@@ -1,15 +1,6 @@
 {
   "pins" : [
     {
-      "identity" : "swift-money",
-      "kind" : "remoteSourceControl",
-      "location" : "git@github.com:paylike/swift-money.git",
-      "state" : {
-        "revision" : "8bf29d7f109062f8a5a7e8e08307efece8ec9199",
-        "version" : "0.2.1"
-      }
-    },
-    {
       "identity" : "swift-request",
       "kind" : "remoteSourceControl",
       "location" : "git@github.com:paylike/swift-request.git",

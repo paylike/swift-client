@@ -1,5 +1,4 @@
 import Foundation
-import PaylikeMoney
 
 /**
  Describes the final response from the payment creation API
@@ -165,6 +164,70 @@ public struct PaymentFlowResponse: Codable {
     public var authorizationId: String?
     public var transactionId: String?
 }
+
+/**
+ Describes the string representation options for PaymentAmount
+ */
+/**
+ Responsible for creating and manipulating payment amounts
+ */
+public struct PaymentAmount : Equatable, Codable {
+    /**
+     Currency of the payment
+     */
+    public let currency: CurrencyCodes;
+    /**
+     Value of the amount
+     */
+    public let value: Int;
+    /**
+     Exponent of the amount
+     */
+    public let exponent: Int;
+    
+    
+    /**
+     Important to notice: this is not a mathematical equation
+     */
+    public static func == (lhs: PaymentAmount, rhs: PaymentAmount) -> Bool {
+        return lhs.currency == rhs.currency && lhs.value == rhs.value && lhs.exponent == rhs.exponent
+    }
+    
+    
+    
+    /**
+     Maximum integer that can be used (originates from JS limitations)
+     */
+    static let maxInt = Int64(9007199254740991)
+    /**
+     Checks if the input parameter is in the safe range or not
+     */
+    static func isInSafeRange(n: Decimal) -> Bool {
+        return n <= Decimal(maxInt) && n >= Decimal(-maxInt)
+    }
+    /**
+     Allows the conversion from double to PaymentAmount
+     */
+    public static func fromDouble(currency: CurrencyCodes, n: Double) throws -> PaymentAmount {
+        if !n.isFinite {
+            throw MoneyError.UnsafeNumber(number: n)
+        }
+        if (!isInSafeRange(n: Decimal(n))) {
+            throw MoneyError.UnsafeNumber(number: n)
+        }
+        let splitted = n.description.split(separator: ".")
+        let wholes = splitted[0];
+        let somes = splitted.count > 1 ? splitted[1] : "";
+        guard let value = Int(wholes + somes) else {
+            throw MoneyError.UnsafeNumber(number: n)
+        }
+        return PaymentAmount(
+            currency: currency,
+            value: value,
+            exponent: value == 0 ? 0 : somes.count);
+    }
+}
+
 
 /**
  All possible options for creating a payment request. More information: https://github.com/paylike/api-reference/blob/main/payments/index.md

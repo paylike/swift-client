@@ -1,6 +1,5 @@
 import XCTest
 @testable import PaylikeClient
-import PaylikeMoney
 import Combine
 
 let key = "YOUR_KEY"
@@ -41,6 +40,12 @@ final class PaylikeClientTests: XCTestCase {
         XCTAssertNil(error)
     }
     
+    func testPaymentAmountCurrency() throws {
+        let dto = PaymentRequestDTO(key: key)
+        dto.amount = PaymentAmount(currency: .AED, value: 1, exponent: 0)
+        XCTAssertEqual(dto.amount!.currency.rawValue, "AED")
+    }
+    
     func getTestCardTokenized() -> (number: String, cvc: String) {
         let (number, _) = client.tokenizeSync(type: PaylikeTokenizedTypes.PCN, value: "4100000000000000")
         let (cvc, _) = client.tokenizeSync(type: PaylikeTokenizedTypes.PCSC, value: "123")
@@ -52,7 +57,8 @@ final class PaylikeClientTests: XCTestCase {
             return
         }
         let dto = PaymentRequestDTO(key: key)
-        dto.amount = try PaylikeMoney.fromDouble(currency: "EUR", n: 5.0)
+        
+        dto.amount = try PaymentAmount.fromDouble(currency: CurrencyCodes.EUR, n: 5.0)
         let (number, cvc) = getTestCardTokenized()
         dto.card = PaymentRequestCardDTO(number: number, month: 12, year: 26, code: cvc)
         var bag: Set<AnyCancellable> = []
