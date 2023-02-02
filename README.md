@@ -1,5 +1,7 @@
 # Paylike - high-level API library
 
+[![build_test](https://github.com/kocsislaci/swift-client/actions/workflows/build_test.yml/badge.svg?branch=main)](https://github.com/kocsislaci/swift-client/actions/workflows/build_test.yml)
+
 Client implementation for Swift.
 
 This implementation is based on [Paylike/JS-Client](https://github.com/paylike/js-client)
