@@ -1,9 +1,7 @@
-import Foundation
-
 /**
- Describes all available currency codes
+ * Describes all available currency codes
  */
-public enum CurrencyCodes: String, Codable {
+public enum CurrencyCodes: String, Encodable {
     case AED
     case AFN
     case ALL
@@ -160,5 +158,3 @@ public enum CurrencyCodes: String, Codable {
     case ZMK
     case ZWL
 }
-
-

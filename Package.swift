@@ -9,17 +9,22 @@ let package = Package(
         .library(name: "PaylikeClient", targets: ["PaylikeClient"])
     ],
     dependencies: [
-        .package(url: "git@github.com:paylike/swift-request.git", .upToNextMajor(from: "0.2.1"))
+        .package(url: "/Users/laszlokocsis/werk/projektek/lunar/paylike/swift/swift-request", branch: "feature/refactor-to-async-await"),
+        .package(url: "git@github.com:Flight-School/AnyCodable", from: "0.6.0"),
+        .package(url: "git@github.com:httpswift/swifter.git", .upToNextMajor(from: "1.5.0"))
     ],
     targets: [
         .target(
             name: "PaylikeClient",
-            dependencies: [.product(name: "PaylikeRequest", package: "swift-request")]),
+            dependencies: [
+                .product(name: "PaylikeRequest", package: "swift-request"),
+                .product(name: "AnyCodable", package: "AnyCodable")
+                          ]),
         .testTarget(
             name: "PaylikeClientTests",
             dependencies: [
                 "PaylikeClient",
-                .product(name: "PaylikeRequest", package: "swift-request"),
+                .product(name: "Swifter", package: "swifter")
             ]
         ),
     ],
