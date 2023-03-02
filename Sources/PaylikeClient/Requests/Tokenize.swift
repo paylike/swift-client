@@ -156,35 +156,4 @@ extension PaylikeClient {
             }
         }
     }
-    
-    /**
-     * Sync tokenization API with
-     * - Apple Pay data
-     */
-    public func tokenizeSync(applePayData data: TokenizeApplePayDataRequest) async throws -> ApplePayToken {
-        return try await self.tokenizeSync(from: data)
-    }
-    /**
-     * Sync tokenization API with
-     * - card data
-     */
-    public func tokenizeSync(cardData data: TokenizeCardDataRequest) async throws -> CardDataToken {
-        return try await self.tokenizeSync(from: data)
-    }
-    /**
-     * Sync Tokenization function for both
-     * - tokenize(applePayData data: TokenizeApplePayDataRequest)
-     * - tokenize(cardData data: TokenizeCardDataRequest)
-     * APIs
-     */
-    @available(iOS 13.0, macOS 10.15, *)
-    fileprivate func tokenizeSync(
-        from data: TokenizeRequest
-    ) async throws -> TokenizeResponse {
-        return try await withCheckedThrowingContinuation { continuation in
-            self.tokenizeSync(from: data) { response in
-                continuation.resume(with: response)
-            }
-        }
-    }
 }
