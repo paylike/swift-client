@@ -18,23 +18,7 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
         }
     }
 
-    func test_tokenize_withCardNumber_async() throws {
-        let expectation = expectation(description: "Value should be received")
-        Task {
-            do {
-                let response = try await PaylikeClient_Tokenize_Live_Tests.paylikeClient.tokenize(cardData: TokenizeCardDataRequest(type: .PCN, value: "4100000000000000"))
-                XCTAssertNotNil(response)
-                expectation.fulfill()
-            } catch {
-                print(error)
-                XCTFail("Unexpected error")
-            }
-        }
-        wait(for: [expectation], timeout: 20)
-    }
-    
-    @available(swift, deprecated: 5.5)
-    func test_tokenize_withCardNumber_completionHandler() throws {
+    func test_tokenize_withCardNumber() throws {
         let expectation = expectation(description: "Value should be received")
         PaylikeClient_Tokenize_Live_Tests.paylikeClient.tokenize(
             cardData: TokenizeCardDataRequest(type: .PCN, value: "4100000000000000")
@@ -50,23 +34,7 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
         wait(for: [expectation], timeout: 20)
     }
     
-    func test_tokenize_withCardSecurityCode_async() throws {
-        let expectation = expectation(description: "Value should be received")
-        Task {
-            do {
-                let response = try await PaylikeClient_Tokenize_Live_Tests.paylikeClient.tokenize(cardData: TokenizeCardDataRequest(type: .PCSC, value: "123"))
-                XCTAssertNotNil(response)
-                expectation.fulfill()
-            } catch {
-                print(error)
-                XCTFail("Unexpected error")
-            }
-        }
-        wait(for: [expectation], timeout: 20)
-    }
-    
-    @available(swift, deprecated: 5.5)
-    func test_tokenize_withCardSecurityCode_completionHandler() throws {
+    func test_tokenize_withCardSecurityCode() throws {
         let expectation = expectation(description: "Value should be received")
         PaylikeClient_Tokenize_Live_Tests.paylikeClient.tokenize(
             cardData: TokenizeCardDataRequest(type: .PCSC, value: "123")
@@ -82,18 +50,37 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
         wait(for: [expectation], timeout: 20)
     }
     
-    func test_tokenizeSync_withCardNumber_async() throws {
-        do {
-            let response = try PaylikeClient_Tokenize_Live_Tests.paylikeClient.tokenizeSync(cardData: TokenizeCardDataRequest(type: .PCN, value: "4100000000000000"))
-            XCTAssertNotNil(response)
-        } catch {
-            print(error)
-            XCTFail("Unexpected error")
+    func test_tokenize_withCardNumber_async() throws {
+        let expectation = expectation(description: "Value should be received")
+        Task {
+            do {
+                let response = try await PaylikeClient_Tokenize_Live_Tests.paylikeClient.tokenize(cardData: TokenizeCardDataRequest(type: .PCN, value: "4100000000000000"))
+                XCTAssertNotNil(response)
+                expectation.fulfill()
+            } catch {
+                print(error)
+                XCTFail("Unexpected error")
+            }
         }
+        wait(for: [expectation], timeout: 20)
+    }
+
+    func test_tokenize_withCardSecurityCode_async() throws {
+        let expectation = expectation(description: "Value should be received")
+        Task {
+            do {
+                let response = try await PaylikeClient_Tokenize_Live_Tests.paylikeClient.tokenize(cardData: TokenizeCardDataRequest(type: .PCSC, value: "123"))
+                XCTAssertNotNil(response)
+                expectation.fulfill()
+            } catch {
+                print(error)
+                XCTFail("Unexpected error")
+            }
+        }
+        wait(for: [expectation], timeout: 20)
     }
     
-    @available(swift, deprecated: 5.5)
-    func test_tokenizeSync_withCardNumber_completionHandler() throws {
+    func test_tokenizeSync_withCardNumber() throws {
         PaylikeClient_Tokenize_Live_Tests.paylikeClient.tokenizeSync(
             cardData: TokenizeCardDataRequest(type: .PCN, value: "4100000000000000")
         ) { result in
@@ -106,18 +93,7 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
         }
     }
     
-    func test_tokenizeSync_withCardSecurityCode_async() throws {
-        do {
-            let response = try PaylikeClient_Tokenize_Live_Tests.paylikeClient.tokenizeSync(cardData: TokenizeCardDataRequest(type: .PCSC, value: "123"))
-            XCTAssertNotNil(response)
-        } catch {
-            print(error)
-            XCTFail("Unexpected error")
-        }
-    }
-    
-    @available(swift, deprecated: 5.5)
-    func test_tokenizeSync_withCardSecurityCode_completionHandler() throws {
+    func test_tokenizeSync_withCardSecurityCode() throws {
         PaylikeClient_Tokenize_Live_Tests.paylikeClient.tokenizeSync(
             cardData: TokenizeCardDataRequest(type: .PCSC, value: "123")
         ) { result in
