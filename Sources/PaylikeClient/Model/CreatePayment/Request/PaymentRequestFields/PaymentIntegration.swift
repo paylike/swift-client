@@ -7,7 +7,7 @@ public struct PaymentIntegration : Encodable {
     /**
      * Initialization with named parameter to clarify usage
      */
-    init(merchantId key: String) {
+    public init(merchantId key: String) {
         self.key = key
     }
 }

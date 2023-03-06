@@ -1,10 +1,9 @@
 /**
- * @TODO: Docs
+ * Describes information for a log line
  */
 internal struct LoggingFormat : Encodable {
-    public var t: String
-    public var tokenizeCardDataRequest: TokenizeCardDataRequest?
-    public var tokenizeApplePayDataRequest: TokenizeApplePayDataRequest?
-    public var createPaymentRequest: CreatePaymentRequest?
+    var t: String
+    var tokenizeCardDataRequest: TokenizeCardDataRequest?
+    var tokenizeApplePayDataRequest: TokenizeApplePayDataRequest?
+    var createPaymentRequest: CreatePaymentRequest?
 }
-

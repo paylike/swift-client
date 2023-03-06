@@ -35,7 +35,6 @@ public struct CreatePaymentRequest : Encodable {
      * If none is provided the merchant's default is used
      */
     public var text: String?
-    
     /**
      * Optional,
      * Custom encodable object, completely arbitrary.

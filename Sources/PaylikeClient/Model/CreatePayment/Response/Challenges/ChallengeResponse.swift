@@ -5,13 +5,13 @@ public struct ChallengeResponse : Decodable {
     /**
      * Challenge information
      */
-    var name: String
+    public var name: String
     /**
      * Defined in `ChallengeTypes`
      */
-    var type: ChallengeTypes
+    public var type: ChallengeTypes
     /**
      * URL path
      */
-    var path: String
+    public var path: String
 }

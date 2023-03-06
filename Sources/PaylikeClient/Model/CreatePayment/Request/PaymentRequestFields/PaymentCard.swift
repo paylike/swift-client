@@ -14,6 +14,12 @@ public struct PaymentCard : Encodable {
      * Expiry date, see at CardExpiry
      */
     public var expiry: CardExpiry
+    
+    public init(number: CardNumberToken, code: CardSecurityCodeToken, expiry: CardExpiry) {
+        self.number = number
+        self.code = code
+        self.expiry = expiry
+    }
 }
 
 /**

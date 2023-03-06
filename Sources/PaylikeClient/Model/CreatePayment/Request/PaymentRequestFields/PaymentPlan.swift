@@ -50,6 +50,11 @@ public struct RepeatInterval : Encodable {
      * Optional, default: 1
      */
     public var value: Int?
+    
+    public init(unit: RepeatIntervalUnits, value: Int? = nil) {
+        self.unit = unit
+        self.value = value
+    }
 }
 
 /**

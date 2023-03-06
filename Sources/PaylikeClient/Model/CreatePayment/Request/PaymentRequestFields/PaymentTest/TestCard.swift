@@ -12,6 +12,20 @@ public struct TestCard : Encodable {
     var scheme: CardSchemeOptions?
     
     var status: CardStatusOptions?
+    
+    public init(
+        balance: PaymentAmount? = nil,
+        code: CardCodeOptions? = nil,
+        limit: PaymentAmount? = nil,
+        scheme: CardSchemeOptions? = nil,
+        status: CardStatusOptions? = nil
+    ) {
+        self.balance = balance
+        self.code = code
+        self.limit = limit
+        self.scheme = scheme
+        self.status = status
+    }
 }
 
 public enum CardCodeOptions : String, Encodable {

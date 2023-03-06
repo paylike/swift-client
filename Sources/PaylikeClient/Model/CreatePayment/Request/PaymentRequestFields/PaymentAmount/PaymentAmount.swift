@@ -3,7 +3,7 @@ import Foundation
 /**
  * Responsible for creating and manipulating payment amounts
  */
-public struct PaymentAmount : Encodable {
+public struct PaymentAmount : Encodable, Equatable {
     /**
      * Currency of the payment
      */
@@ -18,7 +18,7 @@ public struct PaymentAmount : Encodable {
     public var exponent: Int;
     
     /**
-     *
+     * Default initialization
      */
     public init(
         currency code: CurrencyCodes,
@@ -67,12 +67,7 @@ public struct PaymentAmount : Encodable {
     static private func isInSafeRange(n: Decimal) -> Bool {
         return n <= Decimal(maxInt) && n >= Decimal(-maxInt)
     }
-}
-
-/**
- * Extending PaymentAmount to conform equability
- */
-extension PaymentAmount : Equatable {
+    
     /**
      * Check if they are
      * - the same currency and
