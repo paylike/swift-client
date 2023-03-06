@@ -2,7 +2,7 @@ import Foundation
 import PaylikeRequest
 
 /**
- * Extension for tokenization functions with completion handler patter
+ * Extension for tokenization functions
  */
 extension PaylikeClient {
     
@@ -87,46 +87,6 @@ extension PaylikeClient {
     }
     
     /**
-     * Sync tokenization API with
-     * - Apple Pay data
-     */
-    public func tokenizeSync(
-        applePayData data: TokenizeApplePayDataRequest,
-        withCompletion handler: @escaping (Result<ApplePayToken, Error>) -> Void
-    ) -> Void {
-        self.tokenizeSync(from: data, withCompletion: handler)
-    }
-    /**
-     * Sync tokenization API with
-     * - card data
-     */
-    public func tokenizeSync(
-        cardData data: TokenizeCardDataRequest,
-        withCompletion handler: @escaping (Result<CardDataToken, Error>) -> Void
-    ) -> Void {
-        self.tokenizeSync(from: data, withCompletion: handler)
-    }
-    /**
-     * Tokenization function for both
-     * - tokenize(applePayData data: TokenizeApplePayDataRequest)
-     * - tokenize(cardData data: TokenizeCardDataRequest)
-     * APIs     */
-#warning("Highly not recommended, blocks the thread.")
-    fileprivate func tokenizeSync(
-        from data: TokenizeRequest,
-        withCompletion handler: @escaping (Result<TokenizeResponse , Error>) -> Void
-    )  -> Void {
-        let semaphore = DispatchSemaphore(value: 0)
-        self.tokenize(
-            from: data
-        ) { result in
-            handler(result)
-            semaphore.signal()
-        }
-        semaphore.wait()
-    }
-    
-    /**
      * Async tokenization API with
      * - Apple Pay data
      */
@@ -154,6 +114,51 @@ extension PaylikeClient {
             self.tokenize(from: data) { response in
                 continuation.resume(with: response)
             }
+        }
+    }
+    
+    /**
+     * Sync tokenization API with
+     * - Apple Pay data
+     */
+    @available(*, deprecated, message: "Highly not recommended, blocks the thread.")
+    public func tokenizeSync(
+        applePayData data: TokenizeApplePayDataRequest,
+        withCompletion handler: @escaping (Result<ApplePayToken, Error>) -> Void
+    ) -> Void {
+        self.tokenizeSync(from: data, withCompletion: handler)
+    }
+    /**
+     * Sync tokenization API with
+     * - card data
+     */
+    @available(*, deprecated, message: "Highly not recommended, blocks the thread.")
+    public func tokenizeSync(
+        cardData data: TokenizeCardDataRequest,
+        withCompletion handler: @escaping (Result<CardDataToken, Error>) -> Void
+    ) -> Void {
+        self.tokenizeSync(from: data, withCompletion: handler)
+    }
+    /**
+     * Tokenization function for both
+     * - tokenize(applePayData data: TokenizeApplePayDataRequest)
+     * - tokenize(cardData data: TokenizeCardDataRequest)
+     * APIs     */
+    @available(*, deprecated, message: "Highly not recommended, blocks the thread.")
+    fileprivate func tokenizeSync(
+        from data: TokenizeRequest,
+        withCompletion handler: @escaping (Result<TokenizeResponse , Error>) -> Void
+    )  -> Void {
+        let semaphore = DispatchSemaphore(value: 0)
+        self.tokenize(
+            from: data
+        ) { result in
+            handler(result)
+            semaphore.signal()
+        }
+        guard semaphore.wait(timeout: .now() + (self.timeoutInterval + 1)).self == .success else {
+            handler(.failure(ClientError.Timeout))
+            return
         }
     }
 }

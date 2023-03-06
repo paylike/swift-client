@@ -4,18 +4,6 @@ import PaylikeRequest
  * Handles high level requests toward the Paylike APIs
  */
 public final class PaylikeClient {
-    
-    /**
-     * Generates a new client ID to identify requests in the API
-     */
-    static func generateClientID() -> String {
-        let chars = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890"
-        let id = (0..<6).map { _ in
-            String(chars.randomElement()!)
-        }
-        return "swift-1-\(id.joined())"
-    }
-    
     /**
      * Client ID sent to the API to identify the client connection interface
      */
@@ -27,7 +15,7 @@ public final class PaylikeClient {
     /**
      * Underlying httpClient implementation used
      */
-    internal var httpClient: HTTPClient = PaylikeHTTPClient()
+    public var httpClient: HTTPClient = PaylikeHTTPClient()
     /**
      * Used for logging, called when the request is constructed
      */
@@ -46,8 +34,19 @@ public final class PaylikeClient {
      * Initialization with custom clientId
      */
     public init(
-        clientId: String
+        clientID: String
     ) {
-        self.clientID = "swift-1-\(clientId)"
+        self.clientID = "swift-1-\(clientID)"
+    }
+    
+    /**
+     * Generates a new client ID to identify requests in the API
+     */
+    static func generateClientID() -> String {
+        let chars = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890"
+        let id = (0..<6).map { _ in
+            String(chars.randomElement()!)
+        }.joined()
+        return "swift-1-\(id)"
     }
 }
