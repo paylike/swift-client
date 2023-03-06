@@ -5,19 +5,33 @@ import PaylikeRequest
  * Describes errors that can happen in the client
  */
 public enum ClientError : Error {
-    case NotImplemented
+    /*
+     * 
+     */
     case UnknownError
 
+    /*
+     * Thrown when Paylike server responds with some error
+     */
     case PaylikeServerError(
         message: String?,
         code: PaylikeErrorCodes?,
         statusCode: Int?,
         errors: [String]?
     )
-    /**
-     * @TODO: endpoint url errors
+    
+    /*
+     * Thrown when `tokenizeSync(...)` reaches timeout threshold
      */
-    case URLParsingFailed(_ host: String)
+    case Timeout
+    
+    /*
+     * Thrown when URL or URLComponent initialization fails
+     */
+    case URLParsingFailed
+    
+    case JSONParsingFailed
+    
     case InvalidTokenizeData(_ data: TokenizeRequest)
     /**
      * @TODO: model errors
@@ -34,6 +48,8 @@ public enum ClientError : Error {
      */
     case UnexpectedResponseBody(_ body: Data?)
     case NoResponseBody
+
+    case InvalidURLResponse
     /**
      * Describes an unexpected development during the payment challenge execution
      */

@@ -1,8 +1,6 @@
 import Foundation
 import PaylikeRequest
 
-
-#warning("delete this later. epic overengineering...")
 /**
  * Extension for RequestOptions initialization
  */
