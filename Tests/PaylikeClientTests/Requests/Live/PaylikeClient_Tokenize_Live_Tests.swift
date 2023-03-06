@@ -19,6 +19,9 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
     }
 
     func test_tokenize_withCardNumber() throws {
+        if E2E_DISABLED {
+            return
+        }
         let expectation = expectation(description: "Value should be received")
         PaylikeClient_Tokenize_Live_Tests.paylikeClient.tokenize(
             cardData: TokenizeCardDataRequest(type: .PCN, value: "4100000000000000")
@@ -35,6 +38,9 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
     }
     
     func test_tokenize_withCardSecurityCode() throws {
+        if E2E_DISABLED {
+            return
+        }
         let expectation = expectation(description: "Value should be received")
         PaylikeClient_Tokenize_Live_Tests.paylikeClient.tokenize(
             cardData: TokenizeCardDataRequest(type: .PCSC, value: "123")
@@ -51,6 +57,9 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
     }
     
     func test_tokenize_withCardNumber_async() throws {
+        if E2E_DISABLED {
+            return
+        }
         let expectation = expectation(description: "Value should be received")
         Task {
             do {
@@ -66,6 +75,9 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
     }
 
     func test_tokenize_withCardSecurityCode_async() throws {
+        if E2E_DISABLED {
+            return
+        }
         let expectation = expectation(description: "Value should be received")
         Task {
             do {
@@ -81,6 +93,9 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
     }
     
     func test_tokenizeSync_withCardNumber() throws {
+        if E2E_DISABLED {
+            return
+        }
         PaylikeClient_Tokenize_Live_Tests.paylikeClient.tokenizeSync(
             cardData: TokenizeCardDataRequest(type: .PCN, value: "4100000000000000")
         ) { result in
@@ -94,6 +109,9 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
     }
     
     func test_tokenizeSync_withCardSecurityCode() throws {
+        if E2E_DISABLED {
+            return
+        }
         PaylikeClient_Tokenize_Live_Tests.paylikeClient.tokenizeSync(
             cardData: TokenizeCardDataRequest(type: .PCSC, value: "123")
         ) { result in

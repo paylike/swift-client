@@ -13,29 +13,25 @@ internal class MockHTTPClient : HTTPClient {
     /**
      * Overriding logging function to distinguish from the original one
      */
-    internal var loggingFn: (Encodable) -> Void = { obj in
-        print("Mock HTTP Client logger:", terminator: " ")
-        debugPrint(obj)
+    internal var loggingFn: (Encodable) -> Void {
+        get {
+            return httpClient.loggingFn
+        }
+        set {
+            httpClient.loggingFn = newValue
+        }
     }
     
     init() {
-        httpClient.loggingFn = loggingFn
-    }
-    
-    /**
-     * Mocked function for async `sendRequest`
-     */
-    func sendRequest(to endpoint: URL, withOptions options: RequestOptions) async throws -> PaylikeResponse {
-        return try await httpClient.sendRequest(
-            to: getMockURL(for: endpoint),
-            withOptions: options
-        )
+        self.loggingFn = { obj in
+            print("Mock HTTP Client logger:", terminator: " ")
+            debugPrint(obj)
+        }
     }
     
     /**
      * Mocked function for completion handler `sendRequest`
      */
-    @available(swift, deprecated: 5.5)
     func sendRequest(to endpoint: URL, withOptions options: RequestOptions, completion handler: @escaping (Result<PaylikeResponse, Error>) -> Void) {
         do {
             httpClient.sendRequest(
@@ -47,6 +43,17 @@ internal class MockHTTPClient : HTTPClient {
         } catch {
             handler(.failure(error))
         }
+    }
+    
+    /**
+     * Mocked function for async `sendRequest`
+     */
+    @available(iOS 13.0, macOS 10.15, *)
+    func sendRequest(to endpoint: URL, withOptions options: RequestOptions) async throws -> PaylikeResponse {
+        return try await httpClient.sendRequest(
+            to: getMockURL(for: endpoint),
+            withOptions: options
+        )
     }
     
     /**
