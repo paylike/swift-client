@@ -102,3 +102,7 @@ iOSInjectionProject/
 # Api key
 /Tests/PaylikeClientTests/TestUtils/ApiKey.swift
 /Tests/PaylikeClientTests/TestUtils/DONTPUSH.swift
+
+# package manager
+
+Package.resolved
