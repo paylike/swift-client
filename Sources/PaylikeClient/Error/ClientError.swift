@@ -5,12 +5,12 @@ import PaylikeRequest
  * Describes errors that can happen in the client
  */
 public enum ClientError : Error {
-    /*
-     * 
-     */
+    
+    case NotImplementedError
+    
     case UnknownError
 
-    /*
+    /**
      * Thrown when Paylike server responds with some error
      */
     case PaylikeServerError(
@@ -20,12 +20,12 @@ public enum ClientError : Error {
         errors: [String]?
     )
     
-    /*
+    /**
      * Thrown when `tokenizeSync(...)` reaches timeout threshold
      */
     case Timeout
     
-    /*
+    /**
      * Thrown when URL or URLComponent initialization fails
      */
     case URLParsingFailed
@@ -33,8 +33,8 @@ public enum ClientError : Error {
     case JSONParsingFailed
     
     case InvalidTokenizeData(_ data: TokenizeRequest)
+    
     /**
-     * @TODO: model errors
      * Invalid money number error
      */
     case UnsafeNumber(number: Double)
