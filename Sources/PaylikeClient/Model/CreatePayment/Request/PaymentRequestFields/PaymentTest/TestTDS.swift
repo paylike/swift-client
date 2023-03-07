@@ -8,6 +8,16 @@ public struct TestTDS : Encodable {
     var fingerprint: TDSFingerPrintOptions?
     
     var status: TDSStatusOptions?
+    
+    public init(
+        challenge: Bool? = nil,
+        fingerprint: TDSFingerPrintOptions? = nil,
+        status: TDSStatusOptions? = nil
+    ) {
+        self.challenge = challenge
+        self.fingerprint = fingerprint
+        self.status = status
+    }
 }
 
 public enum TDSFingerPrintOptions : String, Encodable {

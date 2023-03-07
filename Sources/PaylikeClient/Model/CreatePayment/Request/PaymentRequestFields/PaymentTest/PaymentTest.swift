@@ -10,6 +10,16 @@ public struct PaymentTest : Encodable {
     var fingerPrint: FingerPrintOptions?
     
     var tds: TestTDS?
+    
+    public init(
+        card: TestCard? = nil,
+        fingerPrint: FingerPrintOptions? = nil,
+        tds: TestTDS? = nil
+    ) {
+        self.card = card
+        self.fingerPrint = fingerPrint
+        self.tds = tds
+    }
 }
 
 public enum FingerPrintOptions : String, Encodable {

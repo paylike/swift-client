@@ -3,28 +3,29 @@
  * we receive one of the following lot of fields:
  */
 public struct CreatePaymentResponse : Decodable {
-    /**
+    
+    /*
      * this
      */
-    var challenges: [ChallengeResponse]?
+    public var challenges: [ChallengeResponse]?
     
-    /**
+    /*
      * or
      */
-    var hints: [String]?
+    public var hints: [String]?
     
-    /**
+    /*
      * or
      */
-    var action: String?
-    var method: String?
-    var fields: [String: String]?
-    var timeout: Int?
+    public var action: String?
+    public var method: String?
+    public var fields: [String: String]?
+    public var timeout: Int?
     // (along hints)
     
-    /**
+    /*
      * or one of them
      */
-    var authorizationId: String?
-    var transactionId: String?
+    public var authorizationId: String?
+    public var transactionId: String?
 }

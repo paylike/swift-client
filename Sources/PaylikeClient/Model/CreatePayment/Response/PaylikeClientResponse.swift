@@ -2,6 +2,7 @@
  * Describes a response recieved during the payment transaction process
  */
 public struct PaylikeClientResponse {
+    
     /**
      * Stores the exact response body
      */
@@ -11,7 +12,6 @@ public struct PaylikeClientResponse {
      * Stores the optionally received HTML description
      */
     public var HTMLBody: String?
-//    public var isHTML: Bool
     
     /**
      * Initializes a new client response with a finalized CreatePaymentResponse
@@ -20,7 +20,6 @@ public struct PaylikeClientResponse {
         with response: CreatePaymentResponse
     ) {
         self.createPaymentResponse = response
-//        self.isHTML = false
     }
     
     /**
@@ -34,6 +33,5 @@ public struct PaylikeClientResponse {
     ) {
         self.createPaymentResponse = response
         self.HTMLBody = HTMLBody
-//        self.isHTML = true
     }
 }

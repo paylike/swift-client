@@ -4,14 +4,13 @@ import XCTest
 
 final class ClientModelTests: XCTestCase {
     
-    func testPaymentAmountCurrency() {
-        let integrationKey = PaymentIntegration(merchantId: key)
-        var dto = CreatePaymentRequest(merchantID: integrationKey)
-        dto.amount = PaymentAmount(currency: .AED, value: 1, exponent: 0)
-        XCTAssertEqual(dto.amount!.currency.rawValue, "AED")
+    // @TODO: 
+    func test_PaymentAmount_currency() {
+        let amount = PaymentAmount(currency: .AED, value: 1, exponent: 0)
+        XCTAssertEqual(amount.currency.rawValue, "AED")
     }
     
-    func testPaymentAmountFromDouble() {
+    func test_PaymentAmount_fromDouble() {
         do {
             let amount = try PaymentAmount(currency: .EUR, double: 20.01)
             XCTAssertEqual(amount.value, 2001)
@@ -22,7 +21,7 @@ final class ClientModelTests: XCTestCase {
         }
     }
     
-    func testPaymentAmountEquatable() throws {
+    func test_PaymentAmount_equality() throws {
         var amount = PaymentAmount(currency: .EUR, value: 2001, exponent: 0)
         var otherAmount = PaymentAmount(currency: .EUR, value: 200100, exponent: 2)
         XCTAssertTrue(amount == otherAmount)
@@ -37,7 +36,7 @@ final class ClientModelTests: XCTestCase {
         XCTAssertTrue(amount != otherAmount)
     }
     
-    func testCardExpiry() {
+    func test_CardExpiry_error() {
         XCTAssertNoThrow(try CardExpiry(month: 11, year: 23))
         
         XCTAssertThrowsError(try CardExpiry(month: 13, year: 23))
@@ -47,6 +46,4 @@ final class ClientModelTests: XCTestCase {
         XCTAssertThrowsError(try CardExpiry(month: 12, year: 2100))
         XCTAssertThrowsError(try CardExpiry(month: 12, year: 2000))
     }
-    
-    
 }

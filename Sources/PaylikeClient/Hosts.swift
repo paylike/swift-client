@@ -9,12 +9,12 @@ internal func getTokenizeEndpointURL(
     switch (data) {
         case is TokenizeApplePayDataRequest:
             guard let url = URL(string: Hosts.APPLE_PAY_VAULT.rawValue) else {
-                throw ClientError.URLParsingFailed(Hosts.APPLE_PAY_VAULT.rawValue)
+                throw ClientError.URLParsingFailed
             }
             return url
         case is TokenizeCardDataRequest:
             guard let url = URL(string: Hosts.CARD_DATA_VAULT.rawValue) else {
-                throw ClientError.URLParsingFailed(Hosts.CARD_DATA_VAULT.rawValue)
+                throw ClientError.URLParsingFailed
             }
             return url
         default:
@@ -27,7 +27,7 @@ internal func getTokenizeEndpointURL(
  */
 internal func getPaymentEndpointURL() throws -> URL {
     guard let url = URL(string: Hosts.CREATE_PAYMENT_API.rawValue) else {
-        throw ClientError.URLParsingFailed(Hosts.CREATE_PAYMENT_API.rawValue)
+        throw ClientError.URLParsingFailed
     }
     return url
 }
