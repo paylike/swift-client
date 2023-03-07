@@ -5,7 +5,7 @@ import XCTest
 
 final class PaylikeClient_CreatePayment_Mock_Tests: XCTestCase {
     
-    static var paylikeClient = PaylikeClient(clientId: "mocked")
+    static var paylikeClient = PaylikeClient(clientID: "mocked")
     static var server = HttpServer()
 
     static let applePayToken = "applePayToken"
