@@ -11,7 +11,7 @@ This implementation is based on [Paylike/JS-Client](https://github.com/paylike/j
 __SPM__:
 ```swift
 // dependencies: 
-.package(url: "git@github.com:paylike/swift-client.git", .upToNextMajor(from: "0.1.0"))
+.package(url: "git@github.com:paylike/swift-client.git", .upToNextMajor(from: "0.2.0"))
 
 // target:
 .product(name: "PaylikeClient", package: "swift-client")
@@ -34,32 +34,31 @@ Example of tokenization:
 ```swift
 import PaylikeClient
 
-let client = PaylikeClient(log: { item in
-    print(item) // Item is encodable
-})
+let client = PaylikeClient()
 
 /**
-    FUTURE BASED USAGE
+    COMPLETION HANDLER BASED USAGE
     ------------------
 */
-let promise = client.tokenize(type: PaylikeTokenizedTypes.PCN, value: "4100000000000000")
-var bag: Set<AnyCancellable> = []
-promise.sink(receiveCompletion: { completion in
-    switch completion {
-    case .failure(let error):
-        print(error)
-    default:
-        return
-    }
-}, receiveValue: { (cardNumberTokenized: String) in
-    // Save tokenized card number....
-}).store(in: &bag)
+client.tokenize(type: PaylikeTokenizedTypes.PCN, value: "4100000000000000") { result in
+    // Save tokenized card number...
+}
+
+/**
+    ASYNC USAGE
+    ------------------
+*/
+Task {
+    let response = try await client.tokenize(type: PaylikeTokenizedTypes.PCN, value: "4100000000000000")
+}
 
 /**
     SYNC USAGE
     ----------
 */
-let (cvcTokenized, error) = client.tokenizeSync(type: PaylikeTokenizedTypes.PCSC, value: "123")
+client.tokenizeSync(type: PaylikeTokenizedTypes.PCSC, value: "123") { result in 
+    // Save tokenized card security code...
+}
 ```
 
 After the tokenization is done, you can now start the payment flow. You need to collect 12 hints (assuming that TDS is enabled) before your payment is considered finished and committed. `paymentCreate` function is constructed to work in a recursive way automatically resolving challenges as much as possible.
@@ -71,31 +70,21 @@ Example:
 ```swift
 import PaylikeClient
 
-let (cardNumberTokenized, cvcTokenized) = ("RESULT_OF_TOKENIZE", "RESULT_OF_TOKENIZE")
-
 /**
-    FUTURE BASED USAGE
-    ------------------
-*/
-let dto = PaymentRequestDTO(key: key)
-dto.amount = try PaylikeMoney.fromDouble(currency: CurrencyCode.EUR, n: 5.0)
-dto.card = PaymentRequestCardDTO(number: cardNumberTokenized, month: 12, year: 26, code: cvcTokenized)
-let promise = client.paymentCreate(payment: dto, hints: [])
-var bag: Set<AnyCancellable> = []
-promise.sink(receiveCompletion: { completion in
-    switch completion {
-    case .failure(let error):
-        print(error)
-    default:
-        return
-    }
-}, receiveValue: { (response: PaylikeClientResponse) in
-    /// Render HTML (to continue with TDS) or save authorization ID of the transaction
-}).store(in: &bag)
-
-/**
-    SYNC USAGE
+    ASYNC USAGE
     ----------
 */
-let (response, error) = client.paymentCreateSync(payment: dto, hints: [])
+// Previously got tokenized data:
+let (numberToken, cvcToken) = ("RESULT_OF_TOKENIZE", "RESULT_OF_TOKENIZE")
+
+let integrationKey = PaymentIntegration(merchantId: key)
+let paymentAmount = PaymentAmount(currency: .EUR, value: 1, exponent: 0)
+let expiry = try CardExpiry(month: 12, year: 26)
+let card = PaymentCard(number: numberToken, code: cvcToken, expiry: expiry)
+var createPaymentRequest = CreatePaymentRequest(with: card, merchantID: integrationKey)
+createPaymentRequest.amount = paymentAmount
+
+Task {
+    let clientResponse = try await client.createPayment(with: &createPaymentRequest)
+}
 ```
