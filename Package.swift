@@ -1,5 +1,4 @@
 // swift-tools-version: 5.6
-// The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
@@ -7,28 +6,27 @@ let package = Package(
     name: "PaylikeClient",
     platforms: [.macOS(.v10_15), .iOS(.v13)],
     products: [
-        // Products define the executables and libraries a package produces, and make them visible to other packages.
-        .library(
-            name: "PaylikeClient",
-            targets: ["PaylikeClient"]),
+        .library(name: "PaylikeClient", targets: ["PaylikeClient"])
     ],
     dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
-        .package(url: "git@github.com:paylike/swift-request.git", .upToNextMajor(from: "0.2.1")),
-        .package(url: "git@github.com:paylike/swift-money.git", .upToNextMajor(from: "0.2.1"))
+        .package(url: "/Users/laszlokocsis/werk/projektek/lunar/paylike/swift/swift-request", branch: "feature/refactor-to-async-await"),
+        .package(url: "git@github.com:Flight-School/AnyCodable", from: "0.6.0"),
+        .package(url: "git@github.com:httpswift/swifter.git", .upToNextMajor(from: "1.5.0"))
     ],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "PaylikeClient",
             dependencies: [
                 .product(name: "PaylikeRequest", package: "swift-request"),
-                .product(name: "PaylikeMoney", package: "swift-money")
-            ]),
+                .product(name: "AnyCodable", package: "AnyCodable")
+                          ]),
         .testTarget(
             name: "PaylikeClientTests",
-            dependencies: ["PaylikeClient", .product(name: "PaylikeMoney", package: "swift-money")]),
-    ]
+            dependencies: [
+                "PaylikeClient",
+                .product(name: "Swifter", package: "swifter")
+            ]
+        ),
+    ],
+    swiftLanguageVersions: [.v5]
 )

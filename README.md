@@ -70,7 +70,6 @@ Example:
 
 ```swift
 import PaylikeClient
-import PaylikeMoney // This is required to create PaymentAmount structs
 
 let (cardNumberTokenized, cvcTokenized) = ("RESULT_OF_TOKENIZE", "RESULT_OF_TOKENIZE")
 
@@ -79,7 +78,7 @@ let (cardNumberTokenized, cvcTokenized) = ("RESULT_OF_TOKENIZE", "RESULT_OF_TOKE
     ------------------
 */
 let dto = PaymentRequestDTO(key: key)
-dto.amount = try PaylikeMoney.fromDouble(currency: "EUR", n: 5.0)
+dto.amount = try PaylikeMoney.fromDouble(currency: CurrencyCode.EUR, n: 5.0)
 dto.card = PaymentRequestCardDTO(number: cardNumberTokenized, month: 12, year: 26, code: cvcTokenized)
 let promise = client.paymentCreate(payment: dto, hints: [])
 var bag: Set<AnyCancellable> = []
