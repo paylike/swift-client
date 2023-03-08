@@ -53,5 +53,5 @@ public enum ClientError : Error {
     /**
      * Describes an unexpected development during the payment challenge execution
      */
-    case UnexpectedPaymentFlowError(payment: CreatePaymentRequest, hints: Set<String>, body: CreatePaymentResponse?)
+    case UnexpectedPaymentFlowError(payment: CreatePaymentRequest, body: CreatePaymentResponse?)
 }

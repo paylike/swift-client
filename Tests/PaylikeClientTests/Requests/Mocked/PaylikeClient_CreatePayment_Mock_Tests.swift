@@ -105,7 +105,7 @@ final class PaylikeClient_CreatePayment_Mock_Tests: XCTestCase {
             createPaymentRequest.test = PaymentTest()
             
             do {
-                let clientResponse = try await PaylikeClient_CreatePayment_Live_Tests.paylikeClient.createPayment(with: &createPaymentRequest)
+                let clientResponse = try await PaylikeClient_CreatePayment_Live_Tests.paylikeClient.createPayment(with: createPaymentRequest)
                 XCTAssertNotNil(clientResponse.createPaymentResponse)
                 XCTAssertNotNil(clientResponse.HTMLBody)
                 XCTAssertNotNil(clientResponse.createPaymentResponse.hints)
