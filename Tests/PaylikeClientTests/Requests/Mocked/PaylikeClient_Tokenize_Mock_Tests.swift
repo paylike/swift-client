@@ -68,7 +68,7 @@ final class PaylikeClient_Tokenize_Mock_Tests: XCTestCase {
         do {
             try server.start(in_port_t(MockPort))
         } catch {
-            XCTFail("Server start error")
+            XCTFail("Server start error: \(error)")
         }
     }
     
@@ -86,8 +86,7 @@ final class PaylikeClient_Tokenize_Mock_Tests: XCTestCase {
                 XCTAssertEqual(response.token, PaylikeClient_Tokenize_Mock_Tests.tokenization + tokenizeToken.value)
                 expectation.fulfill()
             } catch {
-                print(error)
-                XCTFail("Unexpected error")
+                XCTFail("Should not get error: \(error)")
             }
         }
         wait(for: [expectation], timeout: 10)
@@ -102,8 +101,7 @@ final class PaylikeClient_Tokenize_Mock_Tests: XCTestCase {
                 XCTAssertEqual(response.token, PaylikeClient_Tokenize_Mock_Tests.tokenization + tokenizeToken.value)
                 expectation.fulfill()
             } catch {
-                print(error)
-                XCTFail("Unexpected error")
+                XCTFail("Should not get error: \(error)")
             }
         }
         wait(for: [expectation], timeout: 10)
@@ -118,7 +116,7 @@ final class PaylikeClient_Tokenize_Mock_Tests: XCTestCase {
                 XCTAssertEqual(response.token, PaylikeClient_Tokenize_Mock_Tests.tokenization + tokenizeToken.token)
                 expectation.fulfill()
             } catch {
-                XCTFail("\(error)")
+                XCTFail("Should not get error: \(error)")
             }
         }
         wait(for: [expectation], timeout: 10)
@@ -133,7 +131,7 @@ final class PaylikeClient_Tokenize_Mock_Tests: XCTestCase {
                 let response = try result.get()
                 XCTAssertEqual(response.token, PaylikeClient_Tokenize_Mock_Tests.tokenization + tokenizeToken.value)
             } catch {
-                XCTFail("Unexpected error")
+                XCTFail("Should not get error: \(error)")
             }
         }
     }
@@ -147,7 +145,7 @@ final class PaylikeClient_Tokenize_Mock_Tests: XCTestCase {
                 let response = try result.get()
                 XCTAssertEqual(response.token, PaylikeClient_Tokenize_Mock_Tests.tokenization + tokenizeToken.value)
             } catch {
-                XCTFail("Unexpected error")
+                XCTFail("Should not get error: \(error)")
             }
         }
     }
@@ -161,7 +159,7 @@ final class PaylikeClient_Tokenize_Mock_Tests: XCTestCase {
                 let response = try result.get()
                 XCTAssertEqual(response.token, PaylikeClient_Tokenize_Mock_Tests.tokenization + tokenizeToken.token)
             } catch {
-                XCTFail("Unexpected error")
+                XCTFail("Should not get error: \(error)")
             }
         }
     }

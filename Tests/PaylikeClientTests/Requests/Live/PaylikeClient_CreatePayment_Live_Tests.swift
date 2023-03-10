@@ -71,11 +71,40 @@ final class PaylikeClient_CreatePayment_Live_Tests: XCTestCase {
                 XCTAssertNotNil(clientResponse.createPaymentResponse.hints)
                 XCTAssertEqual(clientResponse.createPaymentResponse.hints!.count, 3)
             } catch {
-                XCTFail("Should not get error " + error.localizedDescription)
+                XCTFail("Should not get error: \(error)")
             }
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 20)
+    }
+    
+    func test_createPaymentSync() {
+        if E2E_DISABLED {
+            return
+        }
+        let integrationKey = PaymentIntegration(merchantId: key)
+        let paymentAmount = PaymentAmount(currency: .EUR, value: 1, exponent: 0)
+        getTestPaymentCardSync() { result in
+            do {
+                let card = try result.get()
+                var createPaymentRequest = CreatePaymentRequest(with: card, merchantID: integrationKey)
+                createPaymentRequest.amount = paymentAmount
+                createPaymentRequest.test = PaymentTest()
+                PaylikeClient_CreatePayment_Live_Tests.paylikeClient.createPaymentSync(with: createPaymentRequest) { result in
+                    do {
+                        let clientResponse = try result.get()
+                        XCTAssertNotNil(clientResponse.createPaymentResponse)
+                        XCTAssertNotNil(clientResponse.HTMLBody)
+                        XCTAssertNotNil(clientResponse.createPaymentResponse.hints)
+                        XCTAssertEqual(clientResponse.createPaymentResponse.hints!.count, 3)
+                    } catch {
+                        XCTFail("Should not get error: \(error)")
+                    }
+                }
+            } catch {
+                XCTFail("Should not get error: \(error)")
+            }
+        }
     }
     
     fileprivate func getTestPaymentCard(completion handler: @escaping (Result<PaymentCard, Error>) -> Void) {
@@ -106,5 +135,35 @@ final class PaylikeClient_CreatePayment_Live_Tests: XCTestCase {
         async let cvcToken = try PaylikeClient_CreatePayment_Live_Tests.paylikeClient.tokenize(cardData: TokenizeCardDataRequest(type: .PCSC, value: "123"))
         let expiry = try CardExpiry(month: 12, year: 26)
         return try PaymentCard(number: await numberToken, code: await cvcToken, expiry: expiry)
+    }
+    
+    fileprivate func getTestPaymentCardSync(completion handler: @escaping (Result<PaymentCard, Error>) -> Void) {
+        var numberToken = CardDataToken(token: "")
+        PaylikeClient_CreatePayment_Live_Tests.paylikeClient.tokenizeSync(
+            cardData: TokenizeCardDataRequest(type: .PCN, value: "4100000000000000")
+        ) { result in
+            do {
+                numberToken = try result.get()
+                
+            } catch {
+                handler(.failure(error))
+            }
+        }
+        var cvcToken = CardDataToken(token: "")
+        PaylikeClient_CreatePayment_Live_Tests.paylikeClient.tokenizeSync(
+            cardData: TokenizeCardDataRequest(type: .PCSC, value: "123")
+        ) { result in
+            do {
+                cvcToken = try result.get()
+            } catch {
+                handler(.failure(error))
+            }
+        }
+        do {
+            let expiry = try CardExpiry(month: 12, year: 26)
+            handler(.success(PaymentCard(number: numberToken, code: cvcToken, expiry: expiry)))
+        } catch {
+            handler(.failure(error))
+        }
     }
 }

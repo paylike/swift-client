@@ -31,7 +31,7 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
                 XCTAssertNotNil(response)
                 expectation.fulfill()
             } catch {
-                XCTFail("Unexpected error")
+                XCTFail("Unexpected error: \(error)")
             }
         }
         wait(for: [expectation], timeout: 20)
@@ -50,7 +50,7 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
                 XCTAssertNotNil(response)
                 expectation.fulfill()
             } catch {
-                XCTFail("Unexpected error")
+                XCTFail("Unexpected error: \(error)")
             }
         }
         wait(for: [expectation], timeout: 20)
@@ -68,7 +68,7 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
                 expectation.fulfill()
             } catch {
                 print(error)
-                XCTFail("Unexpected error")
+                XCTFail("Unexpected error: \(error)")
             }
         }
         wait(for: [expectation], timeout: 20)
@@ -86,7 +86,7 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
                 expectation.fulfill()
             } catch {
                 print(error)
-                XCTFail("Unexpected error")
+                XCTFail("Unexpected error: \(error)")
             }
         }
         wait(for: [expectation], timeout: 20)
@@ -103,7 +103,7 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
                 let response = try result.get()
                 XCTAssertNotNil(response)
             } catch {
-                XCTFail("Unexpected error")
+                XCTFail("Unexpected error: \(error)")
             }
         }
     }
@@ -119,7 +119,7 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
                 let response = try result.get()
                 XCTAssertNotNil(response)
             } catch {
-                XCTFail("Unexpected error")
+                XCTFail("Unexpected error: \(error)")
             }
         }
     }
