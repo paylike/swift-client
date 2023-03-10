@@ -13,6 +13,12 @@ extension PaylikeClient {
         with requestData: CreatePaymentRequest,
         withCompletion handler: @escaping (Result<PaylikeClientResponse, Error>) -> Void
     ) -> Void {
+        
+        loggingFn(LoggingFormat(
+            t: "createPayment request:",
+            createPaymentRequest: requestData
+        ))
+        
         _createPayment(
             with: requestData,
             withCompletion: handler
@@ -27,12 +33,6 @@ extension PaylikeClient {
         path: String? = "/payments",
         withCompletion handler: @escaping (Result<PaylikeClientResponse, Error>) -> Void
     ) -> Void {
-
-        loggingFn(LoggingFormat(
-            t: "createPayment request:",
-            createPaymentRequest: requestData
-        ))
-        
         do {
             let (url, requestOptions) = try preparingData(path, requestData)
         
@@ -44,7 +44,7 @@ extension PaylikeClient {
                 withOptions: requestOptions
             ) { result in
                 do {
-                    var createPaymentResponse = try self.checkResponse(result.get())
+                    var createPaymentResponse = try self.checkCreatePaymentResponse(result.get())
                     
                     let fallthroughHandler: (Result<PaylikeClientResponse, Error>) -> Void = { result in
                         do {
@@ -102,19 +102,18 @@ extension PaylikeClient {
                         ) { result in
                             do {
                                 let formResponse = try result.get()
-                                guard let data = formResponse.data else {
-                                    throw ClientError.NoResponseBody
-                                }
-                                guard let stringData = String(data: data, encoding: .utf8) else {
-                                    throw ClientError.UnknownError // @TODO: create error for case
-                                }
+                                let stringData = try self.checkFormResponse(formResponse)
                                 if !requestData.hints.isEmpty {
+                                    var requestHints = requestData.hints
                                     if let responseHints = createPaymentResponse.hints,
                                        !responseHints.isEmpty {
-                                        createPaymentResponse.hints = Array(Set(requestData.hints).union(Set(responseHints)))
-                                    } else {
-                                        createPaymentResponse.hints = requestData.hints
+                                        responseHints.forEach { responseHint in
+                                            if !requestHints.contains(responseHint) {
+                                                requestHints.append(responseHint)
+                                            }
+                                        }
                                     }
+                                    createPaymentResponse.hints = requestHints
                                 }
                                 handler(.success(PaylikeClientResponse(
                                     with: createPaymentResponse,
@@ -134,10 +133,10 @@ extension PaylikeClient {
                     if let responseHints = createPaymentResponse.hints,
                        !responseHints.isEmpty {
                         var requestData = requestData
-                        if !requestData.hints.isEmpty {
-                            requestData.hints = Array(Set(requestData.hints).union(Set(responseHints)))
-                        } else {
-                            requestData.hints = responseHints
+                        responseHints.forEach { responseHint in
+                            if !requestData.hints.contains(responseHint) {
+                                requestData.hints.append(responseHint)
+                            }
                         }
                         self._createPayment(
                             with: requestData,
@@ -167,6 +166,12 @@ extension PaylikeClient {
     public func createPayment(
         with requestData: CreatePaymentRequest
     ) async throws -> PaylikeClientResponse {
+        
+        loggingFn(LoggingFormat(
+            t: "createPayment request:",
+            createPaymentRequest: requestData
+        ))
+        
         var requestData = requestData
         return try await _createPayment(with: &requestData)
     }
@@ -179,12 +184,6 @@ extension PaylikeClient {
         with requestData: inout CreatePaymentRequest,
         path: String? = "/payments"
     ) async throws -> PaylikeClientResponse {
-        
-        loggingFn(LoggingFormat(
-            t: "createPayment request:",
-            createPaymentRequest: requestData
-        ))
-        
         let (url, requestOptions) = try preparingData(path, requestData)
 
         let response = try await httpClient.sendRequest(
@@ -192,7 +191,7 @@ extension PaylikeClient {
             withOptions: requestOptions
         )
         
-        var createPaymentResponse = try self.checkResponse(response)
+        var createPaymentResponse = try self.checkCreatePaymentResponse(response)
         
         /*
          * Challenge process
@@ -225,19 +224,18 @@ extension PaylikeClient {
                 to: URL(string: action)!,
                 withOptions: initRequestOptions(withFormFields: fields)
             )
-            guard let data = formResponse.data else {
-                throw ClientError.NoResponseBody
-            }
-            guard let stringData = String(data: data, encoding: .utf8) else {
-                throw ClientError.UnknownError // @TODO: create error for case
-            }
+            let stringData = try self.checkFormResponse(formResponse)
             if !requestData.hints.isEmpty {
+                var requestHints = requestData.hints
                 if let responseHints = createPaymentResponse.hints,
                    !responseHints.isEmpty {
-                    createPaymentResponse.hints = Array(Set(requestData.hints).union(Set(responseHints)))
-                } else {
-                    createPaymentResponse.hints = requestData.hints
+                    responseHints.forEach { responseHint in
+                        if !requestHints.contains(responseHint) {
+                            requestHints.append(responseHint)
+                        }
+                    }
                 }
+                createPaymentResponse.hints = requestHints
             }
             return PaylikeClientResponse(with: createPaymentResponse, HTMLBody: stringData)
         }
@@ -248,10 +246,11 @@ extension PaylikeClient {
          */
         if let responseHints = createPaymentResponse.hints,
            !responseHints.isEmpty {
-            if !requestData.hints.isEmpty {
-                requestData.hints = Array(Set(requestData.hints).union(Set(responseHints)))
-            } else {
-                requestData.hints = responseHints
+            var requestData = requestData
+            responseHints.forEach { responseHint in
+                if !requestData.hints.contains(responseHint) {
+                    requestData.hints.append(responseHint)
+                }
             }
             return try await _createPayment(with: &requestData)
         }
@@ -266,6 +265,26 @@ extension PaylikeClient {
         )
     }
     
+    /**
+     * Used for creating and executing the payment flow but in a syncronous manner
+     */
+    @available(*, deprecated, message: "Highly not recommended, blocks the thread.")
+    public func createPaymentSync(
+        with requestData: CreatePaymentRequest,
+        withCompletion handler: @escaping (Result<PaylikeClientResponse, Error>) -> Void
+    ) -> Void {
+        let semaphore = DispatchSemaphore(value: 0)
+        createPayment(
+            with: requestData
+        ) { result in
+            handler(result)
+            semaphore.signal()
+        }
+        guard semaphore.wait(timeout: .now() + (self.timeoutInterval + 1)).self == .success else {
+            handler(.failure(ClientError.Timeout))
+            return
+        }
+    }
     
     /**
      * Preparring `url` and `requestOptions` for `sendRequest(to:withOptions)`
@@ -287,7 +306,7 @@ extension PaylikeClient {
     /**
      * Check on the response
      */
-    fileprivate func checkResponse(_ response: PaylikeResponse) throws -> CreatePaymentResponse {
+    fileprivate func checkCreatePaymentResponse(_ response: PaylikeResponse) throws -> CreatePaymentResponse {
         guard let statusCode = (response.urlResponse as? HTTPURLResponse)?.statusCode else {
             throw ClientError.InvalidURLResponse
         }
@@ -298,6 +317,34 @@ extension PaylikeClient {
             switch statusCode {
                 case 200..<300:
                     return try JSONDecoder().decode(CreatePaymentResponse.self, from: data)
+                default:
+                    let requestErrorResponse = try JSONDecoder().decode(RequestErrorResponse.self, from: data)
+                    throw ClientError.PaylikeServerError(
+                        message: requestErrorResponse.message,
+                        code: requestErrorResponse.code,
+                        statusCode: statusCode,
+                        errors: requestErrorResponse.errors)
+            }
+        }()
+    }
+    
+    fileprivate func checkFormResponse(_ response: PaylikeResponse) throws -> String {
+        guard let statusCode = (response.urlResponse as? HTTPURLResponse)?.statusCode else {
+            throw ClientError.InvalidURLResponse
+        }
+        guard let data = response.data else {
+            throw ClientError.UnexpectedResponseBody(nil)
+        }
+        return try {
+            switch statusCode {
+                case 200..<300:
+                    guard let data = response.data else {
+                        throw ClientError.NoResponseBody
+                    }
+                    guard let stringData = String(data: data, encoding: .utf8) else {
+                        throw ClientError.UnknownError // @TODO: create error for case
+                    }
+                    return stringData
                 default:
                     let requestErrorResponse = try JSONDecoder().decode(RequestErrorResponse.self, from: data)
                     throw ClientError.PaylikeServerError(
