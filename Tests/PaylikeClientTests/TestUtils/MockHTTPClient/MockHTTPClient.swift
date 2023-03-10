@@ -64,13 +64,13 @@ internal class MockHTTPClient : HTTPClient {
         urlComponents.scheme = MockScheme
         urlComponents.host = MockHost
         urlComponents.port = MockPort
-        switch url.absoluteString {
-            case "https://applepay.paylike.io/token":
+        switch url.host! {
+            case "applepay.paylike.io":
                 urlComponents.path = MockEndpoints.APPLE_PAY_VAULT.rawValue
-            case "https://vault.paylike.io":
+            case "vault.paylike.io":
                 urlComponents.path = MockEndpoints.CARD_DATA_VAULT.rawValue
-            case "https://b.paylike.io":
-                urlComponents.path = MockEndpoints.CREATE_PAYMENT_API.rawValue
+            case "b.paylike.io":
+                urlComponents.path = MockEndpoints.CREATE_PAYMENT_API.rawValue + url.path
             default:
                 throw HTTPClientError.InvalidURL(url)
         }
