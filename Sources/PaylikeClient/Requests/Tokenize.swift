@@ -68,14 +68,7 @@ extension PaylikeClient {
             ) { result in
                 do {
                     let response = try result.get()
-                    guard let data = response.data else {
-                        handler(.failure(ClientError.NoResponseBody))
-                        return
-                    }
-                    let tokenizeResponse = try JSONDecoder().decode(
-                        TokenizeResponse.self,
-                        from: data
-                    )
+                    let tokenizeResponse = try self.checkTokenizeResponse(response)
                     handler(.success(tokenizeResponse))
                 } catch {
                     handler(.failure(error))
@@ -160,5 +153,27 @@ extension PaylikeClient {
             handler(.failure(ClientError.Timeout))
             return
         }
+    }
+    
+    fileprivate func checkTokenizeResponse(_ response: PaylikeResponse) throws -> TokenizeResponse {
+        guard let statusCode = (response.urlResponse as? HTTPURLResponse)?.statusCode else {
+            throw ClientError.InvalidURLResponse
+        }
+        guard let data = response.data else {
+            throw ClientError.UnexpectedResponseBody(nil)
+        }
+        return try {
+            switch statusCode {
+                case 200..<300:
+                    return try JSONDecoder().decode(TokenizeResponse.self, from: data)
+                default:
+                    let requestErrorResponse = try JSONDecoder().decode(RequestErrorResponse.self, from: data)
+                    throw ClientError.PaylikeServerError(
+                        message: requestErrorResponse.message,
+                        code: requestErrorResponse.code,
+                        statusCode: statusCode,
+                        errors: requestErrorResponse.errors)
+            }
+        }()
     }
 }
