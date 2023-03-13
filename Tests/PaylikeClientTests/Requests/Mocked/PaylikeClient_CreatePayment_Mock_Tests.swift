@@ -40,7 +40,7 @@ final class PaylikeClient_CreatePayment_Mock_Tests: XCTestCase {
     
     func test_createPayment_withCardData() throws {
         let expectation = expectation(description: "Should be able to get HTML")
-        let integrationKey = PaymentIntegration(merchantId: key)
+        let integrationKey = PaymentIntegration(merchantId: merchantId)
         let paymentAmount = PaymentAmount(currency: .EUR, value: 1, exponent: 0)
         getTestPaymentCard() { result in
             do {
@@ -73,7 +73,7 @@ final class PaylikeClient_CreatePayment_Mock_Tests: XCTestCase {
     func test_createPayment_async_withCardData() throws {
         let expectation = expectation(description: "Should be able to get HTML")
         Task {
-            let integrationKey = PaymentIntegration(merchantId: key)
+            let integrationKey = PaymentIntegration(merchantId: merchantId)
             let paymentAmount = PaymentAmount(currency: .EUR, value: 1, exponent: 0)
             let card = try await getTestPaymentCard()
             
@@ -100,7 +100,7 @@ final class PaylikeClient_CreatePayment_Mock_Tests: XCTestCase {
     }
     
     func test_createPaymentSync_withCardData() {
-        let integrationKey = PaymentIntegration(merchantId: key)
+        let integrationKey = PaymentIntegration(merchantId: merchantId)
         let paymentAmount = PaymentAmount(currency: .EUR, value: 1, exponent: 0)
         getTestPaymentCardSync() { result in
             do {

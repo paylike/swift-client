@@ -22,7 +22,7 @@ final class PaylikeClient_CreatePayment_Live_Tests: XCTestCase {
             return
         }
         let expectation = expectation(description: "Should be able to get HTML")
-        let integrationKey = PaymentIntegration(merchantId: key)
+        let integrationKey = PaymentIntegration(merchantId: merchantId)
         let paymentAmount = PaymentAmount(currency: .EUR, value: 1, exponent: 0)
         getTestPaymentCard() { result in
             do {
@@ -55,7 +55,7 @@ final class PaylikeClient_CreatePayment_Live_Tests: XCTestCase {
         }
         let expectation = expectation(description: "Should be able to get HTML")
         Task {
-            let integrationKey = PaymentIntegration(merchantId: key)
+            let integrationKey = PaymentIntegration(merchantId: merchantId)
             let paymentAmount = PaymentAmount(currency: .EUR, value: 1, exponent: 0)
             let card = try await getTestPaymentCard()
             
@@ -81,7 +81,7 @@ final class PaylikeClient_CreatePayment_Live_Tests: XCTestCase {
         if E2E_DISABLED {
             return
         }
-        let integrationKey = PaymentIntegration(merchantId: key)
+        let integrationKey = PaymentIntegration(merchantId: merchantId)
         let paymentAmount = PaymentAmount(currency: .EUR, value: 1, exponent: 0)
         getTestPaymentCardSync() { result in
             do {
