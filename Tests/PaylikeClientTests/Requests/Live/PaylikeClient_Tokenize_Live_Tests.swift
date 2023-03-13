@@ -4,18 +4,17 @@ import XCTest
 
 final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
     
-    static var paylikeClient = PaylikeClient()
+    private static var paylikeClient = PaylikeClient()
+    
+    private static let cardNumber = "4100000000000000"
+    private static let cardSecurityCode = "111"
     
     public class override func setUp() {
         /**
          * Initializing client and HTTPclient without logging. We do not log in tests
          */
-        paylikeClient.loggingFn = { _ in
-            // do nothing
-        }
-        paylikeClient.httpClient.loggingFn = { _ in
-            // do nothing
-        }
+        paylikeClient.loggingFn = { _ in }
+        paylikeClient.httpClient.loggingFn = { _ in }
     }
 
     func test_tokenize_withCardNumber() throws {
@@ -23,8 +22,8 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
             return
         }
         let expectation = expectation(description: "Value should be received")
-        PaylikeClient_Tokenize_Live_Tests.paylikeClient.tokenize(
-            cardData: TokenizeCardDataRequest(type: .PCN, value: "4100000000000000")
+        Self.paylikeClient.tokenize(
+            cardData: TokenizeCardDataRequest(type: .PCN, value: Self.cardNumber)
         ) { result in
             do {
                 let response = try result.get()
@@ -42,8 +41,8 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
             return
         }
         let expectation = expectation(description: "Value should be received")
-        PaylikeClient_Tokenize_Live_Tests.paylikeClient.tokenize(
-            cardData: TokenizeCardDataRequest(type: .PCSC, value: "123")
+        Self.paylikeClient.tokenize(
+            cardData: TokenizeCardDataRequest(type: .PCSC, value: Self.cardSecurityCode)
         ) { result in
             do {
                 let response = try result.get()
@@ -63,7 +62,7 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
         let expectation = expectation(description: "Value should be received")
         Task {
             do {
-                let response = try await PaylikeClient_Tokenize_Live_Tests.paylikeClient.tokenize(cardData: TokenizeCardDataRequest(type: .PCN, value: "4100000000000000"))
+                let response = try await Self.paylikeClient.tokenize(cardData: TokenizeCardDataRequest(type: .PCN, value: Self.cardNumber))
                 XCTAssertNotNil(response)
                 expectation.fulfill()
             } catch {
@@ -81,7 +80,7 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
         let expectation = expectation(description: "Value should be received")
         Task {
             do {
-                let response = try await PaylikeClient_Tokenize_Live_Tests.paylikeClient.tokenize(cardData: TokenizeCardDataRequest(type: .PCSC, value: "123"))
+                let response = try await Self.paylikeClient.tokenize(cardData: TokenizeCardDataRequest(type: .PCSC, value: Self.cardSecurityCode))
                 XCTAssertNotNil(response)
                 expectation.fulfill()
             } catch {
@@ -96,8 +95,8 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
         if E2E_DISABLED {
             return
         }
-        PaylikeClient_Tokenize_Live_Tests.paylikeClient.tokenizeSync(
-            cardData: TokenizeCardDataRequest(type: .PCN, value: "4100000000000000")
+        Self.paylikeClient.tokenizeSync(
+            cardData: TokenizeCardDataRequest(type: .PCN, value: Self.cardNumber)
         ) { result in
             do {
                 let response = try result.get()
@@ -112,8 +111,8 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
         if E2E_DISABLED {
             return
         }
-        PaylikeClient_Tokenize_Live_Tests.paylikeClient.tokenizeSync(
-            cardData: TokenizeCardDataRequest(type: .PCSC, value: "123")
+        Self.paylikeClient.tokenizeSync(
+            cardData: TokenizeCardDataRequest(type: .PCSC, value: Self.cardSecurityCode)
         ) { result in
             do {
                 let response = try result.get()

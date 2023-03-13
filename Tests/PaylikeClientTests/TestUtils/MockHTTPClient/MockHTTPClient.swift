@@ -10,6 +10,8 @@ internal class MockHTTPClient : HTTPClient {
      */
     private let httpClient = PaylikeHTTPClient()
     
+    private var port: Int
+    
     /**
      * Overriding logging function to distinguish from the original one
      */
@@ -22,7 +24,8 @@ internal class MockHTTPClient : HTTPClient {
         }
     }
     
-    init() {
+    init(_ port: Int = MockPort) {
+        self.port = port
         self.loggingFn = { obj in
             print("Mock HTTP Client logger:", terminator: " ")
             debugPrint(obj)
@@ -63,7 +66,7 @@ internal class MockHTTPClient : HTTPClient {
         var urlComponents = URLComponents()
         urlComponents.scheme = MockScheme
         urlComponents.host = MockHost
-        urlComponents.port = MockPort
+        urlComponents.port = port
         switch url.host! {
             case "applepay.paylike.io":
                 urlComponents.path = MockEndpoints.APPLE_PAY_VAULT.rawValue
