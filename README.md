@@ -70,10 +70,6 @@ Example:
 ```swift
 import PaylikeClient
 
-/**
-    ASYNC USAGE
-    ----------
-*/
 // Previously got tokenized data:
 let (numberToken, cvcToken) = ("RESULT_OF_TOKENIZE", "RESULT_OF_TOKENIZE")
 
@@ -84,7 +80,27 @@ let card = PaymentCard(number: numberToken, code: cvcToken, expiry: expiry)
 var createPaymentRequest = CreatePaymentRequest(with: card, merchantID: integrationKey)
 createPaymentRequest.amount = paymentAmount
 
+/**
+    COMPLETION HANDLER BASED USAGE
+    ------------------
+*/
+client.createPayment(with: createPaymentRequest) { result in
+    // handle payment flow completion
+}
+
+/**
+    ASYNC USAGE
+    ----------
+*/
 Task {
-    let clientResponse = try await client.createPayment(with: &createPaymentRequest)
+    let clientResponse = try await client.createPayment(with: createPaymentRequest)
+}
+
+/**
+    SYNC USAGE
+    ----------
+*/
+client.createPaymentSync(with: createPaymentRequest) { result in
+    // handle payment flow completion
 }
 ```
