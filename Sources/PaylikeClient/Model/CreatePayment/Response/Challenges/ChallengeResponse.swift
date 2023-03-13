@@ -1,7 +1,7 @@
 /**
  * Received payment request challenge
  */
-public struct ChallengeResponse : Decodable {
+public struct ChallengeResponse: Decodable {
     /**
      * Challenge information
      */

@@ -6,20 +6,21 @@
  * This is required for unplanned subsequent payments to ensure
  * compliance and high approval rates.
  */
-public struct PaymentUnplanned : Encodable {
+public struct PaymentUnplanned: Encodable {
     public let constumer: Bool?
     public let merchant: Bool?
-    
+
     public init(
         costumer: Bool
     ) {
-        self.constumer = costumer
-        self.merchant = nil
+        constumer = costumer
+        merchant = nil
     }
+
     public init(
         merchant: Bool
     ) {
-        self.constumer = nil
+        constumer = nil
         self.merchant = merchant
     }
 }

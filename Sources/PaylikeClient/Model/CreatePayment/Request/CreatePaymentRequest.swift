@@ -5,7 +5,7 @@ import AnyCodable
  *
  * More information: https://github.com/paylike/api-reference/blob/main/payments/index.md
  */
-public struct CreatePaymentRequest : Encodable {
+public struct CreatePaymentRequest: Encodable {
     /**
      * This is the public key for the merchant
      */
@@ -56,18 +56,18 @@ public struct CreatePaymentRequest : Encodable {
      * Collected hints to attach the request. It is required to execute the payment and TDS flow
      */
     public var hints = [String]()
-    
+
     /**
      * Initialization with only merchantID
      */
     public init(
         merchantID integration: PaymentIntegration
     ) {
-        self.applepay = nil
-        self.card = nil
+        applepay = nil
+        card = nil
         self.integration = integration
     }
-    
+
     /**
      * Initialization with
      * - merchantID
@@ -77,8 +77,8 @@ public struct CreatePaymentRequest : Encodable {
         with applePayToken: ApplePayToken,
         merchantID integration: PaymentIntegration
     ) {
-        self.applepay = applePayToken
-        self.card = nil
+        applepay = applePayToken
+        card = nil
         self.integration = integration
     }
 
@@ -91,8 +91,8 @@ public struct CreatePaymentRequest : Encodable {
         with cardData: PaymentCard,
         merchantID integration: PaymentIntegration
     ) {
-        self.applepay = nil
-        self.card = cardData
+        applepay = nil
+        card = cardData
         self.integration = integration
     }
 }

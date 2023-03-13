@@ -23,13 +23,14 @@ public final class PaylikeClient {
         print("Client logger:", terminator: " ")
         debugPrint(obj)
     }
-    
+
     /**
      * Initialization with generated clientId
      */
     public init() {
-        self.clientID = PaylikeClient.generateClientID()
+        clientID = PaylikeClient.generateClientID()
     }
+
     /**
      * Initialization with custom clientId
      */
@@ -38,13 +39,13 @@ public final class PaylikeClient {
     ) {
         self.clientID = "swift-1-\(clientID)"
     }
-    
+
     /**
      * Generates a new client ID to identify requests in the API
      */
     static func generateClientID() -> String {
         let chars = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890"
-        let id = (0..<6).map { _ in
+        let id = (0 ..< 6).map { _ in
             String(chars.randomElement()!)
         }.joined()
         return "swift-1-\(id)"

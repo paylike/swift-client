@@ -8,7 +8,7 @@ public protocol TokenizeRequest: Encodable {}
  */
 public struct TokenizeApplePayDataRequest: TokenizeRequest {
     public let token: String
-    
+
     public init(token: String) {
         self.token = token
     }
@@ -20,7 +20,7 @@ public struct TokenizeApplePayDataRequest: TokenizeRequest {
 public struct TokenizeCardDataRequest: TokenizeRequest {
     public let type: CardDataType
     public let value: String
-    
+
     public init(type: CardDataType, value: String) {
         self.type = type
         self.value = value

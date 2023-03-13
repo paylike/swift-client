@@ -3,7 +3,7 @@ import Foundation
 /**
  * Describes a plan / subscription in the payment request. Either scheduled or repeat has to be present
  */
-public struct PaymentPlan : Encodable {
+public struct PaymentPlan: Encodable {
     /**
      * Amount of the subscription
      */
@@ -21,7 +21,7 @@ public struct PaymentPlan : Encodable {
 /**
  * Describes a repeating pattern in the payment request plan
  */
-public struct PlanRepeat : Encodable {
+public struct PlanRepeat: Encodable {
     /**
      * Optional, default: Now
      * The first date time when the payment gets executed
@@ -41,7 +41,7 @@ public struct PlanRepeat : Encodable {
 /**
  * Describes an interval in a plan's repeat section when making a payment request
  */
-public struct RepeatInterval : Encodable {
+public struct RepeatInterval: Encodable {
     /**
      * Unit of recurrence
      */
@@ -50,7 +50,7 @@ public struct RepeatInterval : Encodable {
      * Optional, default: 1
      */
     public var value: Int?
-    
+
     public init(unit: RepeatIntervalUnits, value: Int? = nil) {
         self.unit = unit
         self.value = value
@@ -60,7 +60,7 @@ public struct RepeatInterval : Encodable {
 /**
  * Lists the available units of recurrence
  */
-public enum RepeatIntervalUnits : String, Encodable {
+public enum RepeatIntervalUnits: String, Encodable {
     case DAY = "day"
     case WEEK = "week"
     case MONTH = "month"

@@ -17,6 +17,7 @@ internal extension PaylikeClient {
         options.clientId = clientID
         return options
     }
+
     /**
      * Initializes requestOptions with
      * - requestOptions with "POST" method and data
@@ -33,6 +34,7 @@ internal extension PaylikeClient {
         options.clientId = clientID
         return options
     }
+
     /**
      * Initializes requestOptions with
      * - requestOptions with "POST" method and formFields

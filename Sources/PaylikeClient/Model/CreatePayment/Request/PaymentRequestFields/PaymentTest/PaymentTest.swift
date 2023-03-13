@@ -3,14 +3,13 @@
  *
  * Can define empty object for solely test without any preset scenario
  */
-public struct PaymentTest : Encodable {
-    
+public struct PaymentTest: Encodable {
     var card: TestCard?
-    
+
     var fingerPrint: FingerPrintOptions?
-    
+
     var tds: TestTDS?
-    
+
     public init(
         card: TestCard? = nil,
         fingerPrint: FingerPrintOptions? = nil,
@@ -22,8 +21,7 @@ public struct PaymentTest : Encodable {
     }
 }
 
-public enum FingerPrintOptions : String, Encodable {
-    
+public enum FingerPrintOptions: String, Encodable {
     case SUCCESS = "success"
 
     case TIMEOUT = "timeout"

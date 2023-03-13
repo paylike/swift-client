@@ -4,61 +4,62 @@ import PaylikeRequest
 /**
  * Extension for tokenization functions
  */
-extension PaylikeClient {
-    
+public extension PaylikeClient {
     /**
      * Tokenization API with
      * - Apple Pay data
      */
-    public func tokenize(
+    func tokenize(
         applePayData data: TokenizeApplePayDataRequest,
         withCompletion handler: @escaping (Result<ApplePayToken, Error>) -> Void
-    ) -> Void {
-        self.tokenize(from: data, withCompletion: handler)
+    ) {
+        tokenize(from: data, withCompletion: handler)
     }
+
     /**
      * Tokenization API with
      * - card data
      */
-    public func tokenize(
+    func tokenize(
         cardData data: TokenizeCardDataRequest,
         withCompletion handler: @escaping (Result<CardDataToken, Error>) -> Void
-    ) -> Void {
-        self.tokenize(from: data, withCompletion: handler)
+    ) {
+        tokenize(from: data, withCompletion: handler)
     }
+
     /**
      * Tokenization function for both
      * - tokenize(applePayData data: TokenizeApplePayDataRequest)
      * - tokenize(cardData data: TokenizeCardDataRequest)
      * APIs
      */
-    fileprivate func tokenize(
+    private func tokenize(
         from data: TokenizeRequest,
         withCompletion handler: @escaping (Result<TokenizeResponse, Error>) -> Void
-    ) -> Void {
+    ) {
         do {
             /*
              * Get URL and Request options
              */
             let endpointURL = try getTokenizeEndpointURL(from: data)
-            let requestOptions = initRequestOptions(withData: try JSONEncoder().encode(data))
+            let requestOptions = try initRequestOptions(withData: JSONEncoder().encode(data))
             /*
              * Logging
              */
             var loggingFormat = LoggingFormat(t: "tokenize request:")
             switch Mirror(reflecting: data).subjectType {
-                case is TokenizeApplePayDataRequest.Type:
-                    if let loggerData = data as! TokenizeApplePayDataRequest? {
-                        loggingFormat.tokenizeApplePayDataRequest = loggerData
-                    }
-                case is TokenizeCardDataRequest.Type:
-                    if let loggerData = data as! TokenizeCardDataRequest? {
-                        loggingFormat.tokenizeCardDataRequest = loggerData
-                    }
-                default:
-                    break
+            case is TokenizeApplePayDataRequest.Type:
+                if let loggerData = data as! TokenizeApplePayDataRequest? {
+                    loggingFormat.tokenizeApplePayDataRequest = loggerData
+                }
+            case is TokenizeCardDataRequest.Type:
+                if let loggerData = data as! TokenizeCardDataRequest? {
+                    loggingFormat.tokenizeCardDataRequest = loggerData
+                }
+            default:
+                break
             }
-            self.loggingFn(loggingFormat)
+            loggingFn(loggingFormat)
             /*
              * Execute request
              */
@@ -78,21 +79,23 @@ extension PaylikeClient {
             handler(.failure(error))
         }
     }
-    
+
     /**
      * Async tokenization API with
      * - Apple Pay data
      */
-    public func tokenize(applePayData data: TokenizeApplePayDataRequest) async throws -> ApplePayToken {
-        return try await self.tokenize(from: data)
+    func tokenize(applePayData data: TokenizeApplePayDataRequest) async throws -> ApplePayToken {
+        try await tokenize(from: data)
     }
+
     /**
      * Async tokenization API with
      * - card data
      */
-    public func tokenize(cardData data: TokenizeCardDataRequest) async throws -> CardDataToken {
-        return try await self.tokenize(from: data)
+    func tokenize(cardData data: TokenizeCardDataRequest) async throws -> CardDataToken {
+        try await tokenize(from: data)
     }
+
     /**
      * Tokenization function for both
      * - tokenize(applePayData data: TokenizeApplePayDataRequest)
@@ -100,62 +103,64 @@ extension PaylikeClient {
      * APIs
      */
     @available(iOS 13.0, macOS 10.15, *)
-    fileprivate func tokenize(
+    private func tokenize(
         from data: TokenizeRequest
     ) async throws -> TokenizeResponse {
-        return try await withCheckedThrowingContinuation { continuation in
+        try await withCheckedThrowingContinuation { continuation in
             self.tokenize(from: data) { response in
                 continuation.resume(with: response)
             }
         }
     }
-    
+
     /**
      * Sync tokenization API with
      * - Apple Pay data
      */
     @available(*, deprecated, message: "Highly not recommended, blocks the thread.")
-    public func tokenizeSync(
+    func tokenizeSync(
         applePayData data: TokenizeApplePayDataRequest,
         withCompletion handler: @escaping (Result<ApplePayToken, Error>) -> Void
-    ) -> Void {
-        self.tokenizeSync(from: data, withCompletion: handler)
+    ) {
+        tokenizeSync(from: data, withCompletion: handler)
     }
+
     /**
      * Sync tokenization API with
      * - card data
      */
     @available(*, deprecated, message: "Highly not recommended, blocks the thread.")
-    public func tokenizeSync(
+    func tokenizeSync(
         cardData data: TokenizeCardDataRequest,
         withCompletion handler: @escaping (Result<CardDataToken, Error>) -> Void
-    ) -> Void {
-        self.tokenizeSync(from: data, withCompletion: handler)
+    ) {
+        tokenizeSync(from: data, withCompletion: handler)
     }
+
     /**
      * Tokenization function for both
      * - tokenize(applePayData data: TokenizeApplePayDataRequest)
      * - tokenize(cardData data: TokenizeCardDataRequest)
      * APIs     */
     @available(*, deprecated, message: "Highly not recommended, blocks the thread.")
-    fileprivate func tokenizeSync(
+    private func tokenizeSync(
         from data: TokenizeRequest,
-        withCompletion handler: @escaping (Result<TokenizeResponse , Error>) -> Void
-    )  -> Void {
+        withCompletion handler: @escaping (Result<TokenizeResponse, Error>) -> Void
+    ) {
         let semaphore = DispatchSemaphore(value: 0)
-        self.tokenize(
+        tokenize(
             from: data
         ) { result in
             handler(result)
             semaphore.signal()
         }
-        guard semaphore.wait(timeout: .now() + (self.timeoutInterval + 1)).self == .success else {
+        guard semaphore.wait(timeout: .now() + (timeoutInterval + 1)).self == .success else {
             handler(.failure(ClientError.Timeout))
             return
         }
     }
-    
-    fileprivate func checkTokenizeResponse(_ response: PaylikeResponse) throws -> TokenizeResponse {
+
+    private func checkTokenizeResponse(_ response: PaylikeResponse) throws -> TokenizeResponse {
         guard let statusCode = (response.urlResponse as? HTTPURLResponse)?.statusCode else {
             throw ClientError.InvalidURLResponse
         }
@@ -164,15 +169,16 @@ extension PaylikeClient {
         }
         return try {
             switch statusCode {
-                case 200..<300:
-                    return try JSONDecoder().decode(TokenizeResponse.self, from: data)
-                default:
-                    let requestErrorResponse = try JSONDecoder().decode(RequestErrorResponse.self, from: data)
-                    throw ClientError.PaylikeServerError(
-                        message: requestErrorResponse.message,
-                        code: requestErrorResponse.code,
-                        statusCode: statusCode,
-                        errors: requestErrorResponse.errors)
+            case 200 ..< 300:
+                return try JSONDecoder().decode(TokenizeResponse.self, from: data)
+            default:
+                let requestErrorResponse = try JSONDecoder().decode(RequestErrorResponse.self, from: data)
+                throw ClientError.PaylikeServerError(
+                    message: requestErrorResponse.message,
+                    code: requestErrorResponse.code,
+                    statusCode: statusCode,
+                    errors: requestErrorResponse.errors
+                )
             }
         }()
     }

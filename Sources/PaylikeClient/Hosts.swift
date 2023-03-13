@@ -6,19 +6,19 @@ import Foundation
 internal func getTokenizeEndpointURL(
     from data: TokenizeRequest
 ) throws -> URL {
-    switch (data) {
-        case is TokenizeApplePayDataRequest:
-            guard let url = URL(string: Hosts.APPLE_PAY_VAULT.rawValue) else {
-                throw ClientError.URLParsingFailed
-            }
-            return url
-        case is TokenizeCardDataRequest:
-            guard let url = URL(string: Hosts.CARD_DATA_VAULT.rawValue) else {
-                throw ClientError.URLParsingFailed
-            }
-            return url
-        default:
-            throw ClientError.InvalidTokenizeData(data)
+    switch data {
+    case is TokenizeApplePayDataRequest:
+        guard let url = URL(string: Hosts.APPLE_PAY_VAULT.rawValue) else {
+            throw ClientError.URLParsingFailed
+        }
+        return url
+    case is TokenizeCardDataRequest:
+        guard let url = URL(string: Hosts.CARD_DATA_VAULT.rawValue) else {
+            throw ClientError.URLParsingFailed
+        }
+        return url
+    default:
+        throw ClientError.InvalidTokenizeData(data)
     }
 }
 
@@ -36,7 +36,6 @@ internal func getPaymentEndpointURL() throws -> URL {
  * Describes URL-s
  */
 internal enum Hosts: String {
-    
     /**
      * URL for Apple Pay tokenization
      */
