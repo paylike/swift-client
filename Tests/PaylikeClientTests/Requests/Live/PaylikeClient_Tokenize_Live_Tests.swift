@@ -28,10 +28,10 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
             do {
                 let response = try result.get()
                 XCTAssertNotNil(response)
-                expectation.fulfill()
             } catch {
                 XCTFail("Unexpected error: \(error)")
             }
+            expectation.fulfill()
         }
         wait(for: [expectation], timeout: 20)
     }
@@ -47,10 +47,10 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
             do {
                 let response = try result.get()
                 XCTAssertNotNil(response)
-                expectation.fulfill()
             } catch {
                 XCTFail("Unexpected error: \(error)")
             }
+            expectation.fulfill()
         }
         wait(for: [expectation], timeout: 20)
     }
@@ -64,11 +64,11 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
             do {
                 let response = try await Self.paylikeClient.tokenize(cardData: TokenizeCardDataRequest(type: .PCN, value: Self.cardNumber))
                 XCTAssertNotNil(response)
-                expectation.fulfill()
             } catch {
                 print(error)
                 XCTFail("Unexpected error: \(error)")
             }
+            expectation.fulfill()
         }
         wait(for: [expectation], timeout: 20)
     }
@@ -82,11 +82,11 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
             do {
                 let response = try await Self.paylikeClient.tokenize(cardData: TokenizeCardDataRequest(type: .PCSC, value: Self.cardSecurityCode))
                 XCTAssertNotNil(response)
-                expectation.fulfill()
             } catch {
                 print(error)
                 XCTFail("Unexpected error: \(error)")
             }
+            expectation.fulfill()
         }
         wait(for: [expectation], timeout: 20)
     }
@@ -121,5 +121,24 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
                 XCTFail("Unexpected error: \(error)")
             }
         }
+    }
+    
+    func test_tokenize_withApplePayToken() throws {
+        if APPLEPAY_DISABLED {
+            return
+        }
+        let expectation = expectation(description: "Value should be received")
+        Self.paylikeClient.tokenize(
+            applePayData: TokenizeApplePayDataRequest(token: applePay_merchantId_cert)
+        ) { result in
+            do {
+                let response = try result.get()
+                XCTAssertNotNil(response)
+            } catch {
+                XCTFail("Unexpected error: \(error)")
+            }
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 20)
     }
 }
