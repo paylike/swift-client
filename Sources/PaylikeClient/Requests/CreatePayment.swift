@@ -304,7 +304,7 @@ extension PaylikeClient {
     }
     
     /**
-     * Check on the response
+     * Check on the `CreatePaymentResponse` type response
      */
     fileprivate func checkCreatePaymentResponse(_ response: PaylikeResponse) throws -> CreatePaymentResponse {
         guard let statusCode = (response.urlResponse as? HTTPURLResponse)?.statusCode else {
@@ -328,6 +328,9 @@ extension PaylikeClient {
         }()
     }
     
+    /**
+     * Check on the `String` type response
+     */
     fileprivate func checkFormResponse(_ response: PaylikeResponse) throws -> String {
         guard let statusCode = (response.urlResponse as? HTTPURLResponse)?.statusCode else {
             throw ClientError.InvalidURLResponse
