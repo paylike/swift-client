@@ -14,15 +14,15 @@ final class PaylikeClient_CreatePayment_Mock_Tests: XCTestCase {
     public class override func setUp() {
         
         /*
+         * Mock the internal HTTP client
+         */
+        mockedPaylikeClient.httpClient = MockHTTPClient(MockPort + 1)
+        
+        /*
          * Initializing client and HTTPclient without logging. We do not log in tests
          */
         mockedPaylikeClient.loggingFn = { _ in }
         mockedPaylikeClient.httpClient.loggingFn = { _ in }
-        
-        /*
-         * Mock the internal HTTP client
-         */
-        mockedPaylikeClient.httpClient = MockHTTPClient(MockPort + 1)
         
         /*
          * Mock server start
