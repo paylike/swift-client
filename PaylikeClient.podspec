@@ -18,4 +18,5 @@ interface to create payments in the Paylike ecosystem
 }
   s.source_files = 'Sources/PaylikeClient/**/*'
   s.dependency 'PaylikeRequest'
+  s.dependency 'AnyCodable-FlightSchool'
 end
