@@ -98,3 +98,11 @@ fastlane/test_output
 # https://github.com/johnno1962/injectionforxcode
 
 iOSInjectionProject/
+
+# Api key
+/Tests/PaylikeClientTests/TestUtils/ApiKey.swift
+/Tests/PaylikeClientTests/TestUtils/DONTPUSH.swift
+
+# package manager
+
+Package.resolved
