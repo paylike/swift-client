@@ -1,6 +1,5 @@
 /**
- * Describes a network request response of the `createPayment` request flow
- * we receive one of the following lot of fields:
+ * Describes a network request response of the `createPayment` request flow. We receive one of the following lot of fields:
  */
 public struct CreatePaymentResponse: Decodable {
     /*
