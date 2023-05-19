@@ -16,6 +16,11 @@ public struct PaymentPlan: Encodable {
      * Repeating pattern of the plan
      */
     public var `repeat`: PlanRepeat?
+    
+    public init(amount: PaymentAmount, scheduled: Date? = nil) {
+        self.amount = amount
+        self.scheduled = scheduled
+    }
 }
 
 /**
@@ -36,6 +41,12 @@ public struct PlanRepeat: Encodable {
      * Interval of the repeating pattern
      */
     public var interval: RepeatInterval
+    
+    public init(first: Date? = nil, count: Int? = nil, interval: RepeatInterval) {
+        self.first = first
+        self.count = count
+        self.interval = interval
+    }
 }
 
 /**
