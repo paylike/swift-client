@@ -4,7 +4,7 @@ import PaylikeRequest
 /**
  * Extension for RequestOptions initialization
  */
-internal extension PaylikeClient {
+extension PaylikeClient {
     /**
      * Initializes requestOptions with
      * - requestOptions with "GET" method

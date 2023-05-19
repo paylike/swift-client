@@ -69,9 +69,7 @@ public struct PaymentAmount: Encodable, Equatable {
     }
 
     /**
-     * Check if they are
-     * - the same currency and
-     * - has the same value on common denominator
+     * Check if they are the same currency and has the same value on common denominator
      */
     public static func == (lhs: PaymentAmount, rhs: PaymentAmount) -> Bool {
         if lhs.currency != rhs.currency {

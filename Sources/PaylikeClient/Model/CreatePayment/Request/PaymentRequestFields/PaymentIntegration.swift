@@ -2,6 +2,10 @@
  * Describes the necessary merchantID to successfully make request to the backend
  */
 public struct PaymentIntegration: Encodable {
+    
+    /**
+     * This field bears the merchantID
+     */
     public var key: String
 
     /**

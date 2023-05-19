@@ -127,9 +127,10 @@ final class PaylikeClient_Tokenize_Live_Tests: XCTestCase {
         if APPLEPAY_DISABLED {
             return
         }
+        let applePayTokenGotFromPassKit = ""
         let expectation = expectation(description: "Value should be received")
         Self.paylikeClient.tokenize(
-            applePayData: TokenizeApplePayDataRequest(token: applePay_merchantId_cert)
+            applePayData: TokenizeApplePayDataRequest(token: applePayTokenGotFromPassKit)
         ) { result in
             do {
                 let response = try result.get()
