@@ -23,6 +23,5 @@ public struct PaymentTest: Encodable {
 
 public enum FingerPrintOptions: String, Encodable {
     case SUCCESS = "success"
-
     case TIMEOUT = "timeout"
 }

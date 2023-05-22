@@ -11,7 +11,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/paylike/swift-request", .upToNextMajor(from: "0.3.0")),
         .package(url: "https://github.com/Flight-School/AnyCodable", .upToNextMajor(from: "0.6.0")),
-        .package(url: "https://github.com/httpswift/swifter.git", .upToNextMajor(from: "1.5.0"))
+        .package(url: "https://github.com/httpswift/swifter", .upToNextMajor(from: "1.5.0"))
     ],
     targets: [
         .target(

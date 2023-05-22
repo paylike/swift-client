@@ -6,8 +6,7 @@ import PaylikeRequest
  */
 public extension PaylikeClient {
     /**
-     * Tokenization API with
-     * - Apple Pay data
+     * Calling the tokenization API
      */
     func tokenize(
         applePayData data: TokenizeApplePayDataRequest,
@@ -17,8 +16,7 @@ public extension PaylikeClient {
     }
 
     /**
-     * Tokenization API with
-     * - card data
+     * Calling the tokenization API
      */
     func tokenize(
         cardData data: TokenizeCardDataRequest,
@@ -81,16 +79,14 @@ public extension PaylikeClient {
     }
 
     /**
-     * Async tokenization API with
-     * - Apple Pay data
+     * Calling the tokenization API with async syntax
      */
     func tokenize(applePayData data: TokenizeApplePayDataRequest) async throws -> ApplePayToken {
         try await tokenize(from: data)
     }
 
     /**
-     * Async tokenization API with
-     * - card data
+     * Calling the tokenization API with async syntax
      */
     func tokenize(cardData data: TokenizeCardDataRequest) async throws -> CardDataToken {
         try await tokenize(from: data)
@@ -114,8 +110,7 @@ public extension PaylikeClient {
     }
 
     /**
-     * Sync tokenization API with
-     * - Apple Pay data
+     * Sync calling the tokenization API
      */
     @available(*, deprecated, message: "Highly not recommended, blocks the thread.")
     func tokenizeSync(
@@ -126,8 +121,7 @@ public extension PaylikeClient {
     }
 
     /**
-     * Sync tokenization API with
-     * - card data
+     * Sync calling the tokenization API
      */
     @available(*, deprecated, message: "Highly not recommended, blocks the thread.")
     func tokenizeSync(

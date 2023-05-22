@@ -14,4 +14,10 @@ public struct ChallengeResponse: Decodable {
      * URL path
      */
     public var path: String
+    
+    public init(name: String, type: ChallengeTypes, path: String) {
+        self.name = name
+        self.type = type
+        self.path = path
+    }
 }

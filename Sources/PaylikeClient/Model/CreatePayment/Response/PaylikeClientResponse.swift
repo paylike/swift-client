@@ -22,9 +22,7 @@ public struct PaylikeClientResponse {
     }
 
     /**
-     * Initializes a new client response with
-     * - CreatePaymentResponse
-     * - HTML body
+     * Initializes a new client response with HTML body for webView ThreeDS
      */
     public init(
         with response: CreatePaymentResponse,

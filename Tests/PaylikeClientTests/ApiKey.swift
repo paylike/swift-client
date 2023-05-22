@@ -4,3 +4,4 @@
 
 let merchantId = "YOUR_KEY"
 let E2E_DISABLED = merchantId == "YOUR_KEY"
+let APPLEPAY_DISABLED = true
